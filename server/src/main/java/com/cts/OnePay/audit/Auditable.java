@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -24,10 +25,10 @@ public class Auditable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    protected Date createdDate;
+    protected LocalDateTime createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    protected Date lastModifiedDate;
+    protected LocalDateTime lastModifiedDate;
 
 }
