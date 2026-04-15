@@ -1,4 +1,8 @@
 package com.cts.OnePay.transaction.model;
 
-public class Ledger {
+import com.cts.OnePay.audit.Auditable;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Ledger extends Auditable {
 }

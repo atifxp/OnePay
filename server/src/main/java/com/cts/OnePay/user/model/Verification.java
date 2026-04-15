@@ -1,4 +1,8 @@
 package com.cts.OnePay.user.model;
 
-public class Verification {
+import com.cts.OnePay.audit.Auditable;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Verification extends Auditable {
 }
