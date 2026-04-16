@@ -1,4 +1,4 @@
-package com.cts.OnePay.loan.enums;
+package com.cts.OnePay.loan.model.enums;
 
 public enum LoanType {
     PERSONAL(7.5),

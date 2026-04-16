@@ -1,4 +1,4 @@
-package com.cts.OnePay.loan.enums;
+package com.cts.OnePay.loan.model.enums;
 
 public enum LoanStatus {
     SUBMITTED,

@@ -1,6 +1,6 @@
-package com.cts.OnePay.loan;
+package com.cts.OnePay.loan.model;
 
-import com.cts.OnePay.loan.enums.LoanStatus;
+import com.cts.OnePay.loan.model.enums.LoanStatus;
 import com.cts.OnePay.user.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
