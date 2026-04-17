@@ -1,6 +1,6 @@
 package com.cts.OnePay.user.dto;
 
-import com.cts.OnePay.user.model.enums.AccountStatus;
+import com.cts.OnePay.user.model.enums.VerificationStatus;
 import com.cts.OnePay.user.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +26,5 @@ public class UserResponseDto {
 
     private Role role;
 
-    private AccountStatus accountStatus = AccountStatus.PENDING;
+    private VerificationStatus accountStatus = VerificationStatus.PENDING;
 }

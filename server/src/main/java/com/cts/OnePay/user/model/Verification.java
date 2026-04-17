@@ -1,6 +1,7 @@
 package com.cts.OnePay.user.model;
 
 import com.cts.OnePay.audit.Auditable;
+import com.cts.OnePay.user.model.enums.VerificationStatus;
 import com.cts.OnePay.user.model.enums.DocType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ public class Verification extends Auditable {
     private Long verificationId;
 
     @JoinColumn(name = "userId",referencedColumnName = "userId")
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     private User user;
 
@@ -31,5 +32,12 @@ public class Verification extends Auditable {
 
     @NotNull
     private String docNumber;
+
+    @JoinColumn(name="verifierId", referencedColumnName = "userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User verifier = null;
+
+    @Enumerated(EnumType.STRING)
+    private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 
 }

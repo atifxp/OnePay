@@ -2,7 +2,6 @@ package com.cts.OnePay.user.model;
 
 import com.cts.OnePay.audit.Auditable;
 import com.cts.OnePay.user.model.enums.Role;
-import com.cts.OnePay.user.model.enums.AccountStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -54,6 +53,5 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     private Role role = Role.CUSTOMER;
 
-    @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus = AccountStatus.PENDING;
+
 }

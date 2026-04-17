@@ -31,7 +31,7 @@ public class Session extends Auditable {
     private Long sessionId;
 
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @NotNull
