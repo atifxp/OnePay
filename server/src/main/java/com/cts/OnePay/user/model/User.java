@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(
-        name = "user",
+        name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "email_unique",

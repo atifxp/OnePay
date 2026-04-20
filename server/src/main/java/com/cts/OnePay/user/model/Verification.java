@@ -23,14 +23,14 @@ public class Verification extends Auditable {
 
     @JoinColumn(name = "userId",referencedColumnName = "userId")
     @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @NotNull(message = "Sender Id should not be empty")
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "Document Type should be specified")
     private DocType docType;
 
-    @NotNull
+    @NotNull(message = "Document number should be specified")
     private String docNumber;
 
     @JoinColumn(name="verifierId", referencedColumnName = "userId")
