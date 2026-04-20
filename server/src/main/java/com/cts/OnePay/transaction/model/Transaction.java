@@ -2,6 +2,7 @@ package com.cts.OnePay.transaction.model;
 
 import com.cts.OnePay.transaction.model.enums.TransactionStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Transaction{
 
     @NotNull
     @Column(precision = 15, scale = 2)
-    @Min(value = 1, message = "Transaction amount must be at least 1")
+    @DecimalMin(value = "1.0", message = "Transaction amount must be at least 1")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
