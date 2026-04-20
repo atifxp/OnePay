@@ -80,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
         Wallet wallet= walletRepository.findByUser_UserId(userId)
                 .orElseThrow(()-> new RuntimeException("Cannot find user wallet"));
         Pageable pageable= PageRequest.of(page,size);
-        Page<Transaction> transactions=transactionRepository.findByWalletId(wallet.getWalletId(),pageable);
+        Page<Transaction> transactions=transactionRepository.findBySenderWallet_WalletId(wallet.getWalletId(),pageable);
         return transactions.map(txn->toDto(txn));
     }
 

@@ -4,7 +4,6 @@ import com.cts.OnePay.transaction.dto.TransactionResponseDto;
 import com.cts.OnePay.transaction.dto.TransferRequestDto;
 import org.springframework.data.domain.Page;
 
-
 public interface TransactionService {
     public TransactionResponseDto transferMoney(Long senderUserId, TransferRequestDto requestDto);
     public Page<TransactionResponseDto> getMyTransactions(Long userId, int page, int size);

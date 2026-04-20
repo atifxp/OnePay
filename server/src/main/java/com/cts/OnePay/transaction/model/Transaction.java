@@ -22,7 +22,7 @@ public class Transaction{
     private Long transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sendWalletId", referencedColumnName = "walletId" )
+    @JoinColumn(name = "senderWallet", referencedColumnName = "walletId" )
     @NotNull
     private Wallet senderWallet;
 
