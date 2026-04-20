@@ -9,7 +9,8 @@ spring:
     password: ${DATASOURCE_PASSWORD}
   jpa:
     show-sql: true
-    ddl-auto: update
+    hibernate:
+      ddl-auto: update
 
 frontend:
   url: ${FRONTEND_URL}

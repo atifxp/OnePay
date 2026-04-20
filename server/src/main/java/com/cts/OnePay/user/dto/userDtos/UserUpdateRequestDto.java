@@ -12,8 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequestDto {
-    private Long userId;
-
 
     private String fullName;
 
@@ -23,7 +21,4 @@ public class UserUpdateRequestDto {
 
     private String phone;
 
-    private Role role;
-
-    private VerificationStatus accountStatus = VerificationStatus.PENDING;
 }

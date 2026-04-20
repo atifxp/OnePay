@@ -22,7 +22,7 @@ public class VerificationController {
 
     @PostMapping("/submit")
     public ResponseEntity<Map<String,String>> submit(@RequestBody @Valid VerificationRequestDto verificationRequest){
-        Long userId = -1L; //Placeholder: To be Changed
+        Long userId = 1L; //Placeholder: To be Changed
         Map<String, String> response = verificationService.submitDoc(userId,verificationRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -30,7 +30,7 @@ public class VerificationController {
 
     @GetMapping("/status")
     public ResponseEntity<Map<String,String>> checkStatus(){
-        Long userId = -1L;
+        Long userId = 1L;
         Map<String, String> response = verificationService.checkStatus(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -39,14 +39,14 @@ public class VerificationController {
 
     @PatchMapping("/{userId}/approve")
     public ResponseEntity<Map<String, String>> approve(@PathVariable("userId")Long userId, @RequestBody VerificationUpdateRequestDto updates){
-        Long verifierId = -1L;
+        Long verifierId = 1L;
         Map<String, String> response = verificationService.approve(verifierId, userId, updates);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/{userId}/reject")
     public ResponseEntity<Map<String, String>> reject(@PathVariable("userId")Long userId, @RequestBody VerificationUpdateRequestDto updates){
-        Long verifierId = -1L;
+        Long verifierId = 1L;
         Map<String, String> response = verificationService.reject(verifierId, userId, updates);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

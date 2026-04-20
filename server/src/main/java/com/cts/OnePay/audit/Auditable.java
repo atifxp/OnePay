@@ -23,11 +23,11 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class Auditable {
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @CreatedDate
     protected LocalDateTime createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;
 

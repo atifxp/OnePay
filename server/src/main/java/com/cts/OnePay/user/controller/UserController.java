@@ -17,14 +17,14 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getProfile(){
-        Long userId = -1L; //Placeholder: To be changed
+        Long userId = 1L; //Placeholder: To be changed
         UserResponseDto response = userService.getProfile(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/me")
     public ResponseEntity<?> updateProfile(@RequestBody UserUpdateRequestDto dto){
-        Long userId = -1L; //Placeholder: To be changed
+        Long userId = 1L; //Placeholder: To be changed
         UserResponseDto response = userService.updateProfile(userId,dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }

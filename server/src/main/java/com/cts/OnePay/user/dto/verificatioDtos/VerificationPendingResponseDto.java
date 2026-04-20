@@ -1,5 +1,6 @@
 package com.cts.OnePay.user.dto.verificatioDtos;
 
+import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.model.User;
 import com.cts.OnePay.user.model.enums.DocType;
 import com.cts.OnePay.user.model.enums.VerificationStatus;
@@ -18,7 +19,7 @@ public class VerificationPendingResponseDto {
 
     private Long verificationId;
 
-    private User user;
+    private UserResponseDto user;
 
     private DocType docType;
 

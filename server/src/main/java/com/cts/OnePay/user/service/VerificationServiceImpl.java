@@ -72,7 +72,7 @@ public class VerificationServiceImpl implements VerificationService{
 
     @Override
     public Map<String, String> checkStatus(Long userId) {
-        Verification exists = verificationRepository.findById(userId)
+        Verification exists = verificationRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Verification Documents not submitted"));
         return Map.of("status", exists.getVerificationStatus().name());
     }
@@ -124,9 +124,9 @@ public class VerificationServiceImpl implements VerificationService{
 
         Page<Verification> verifications = verificationRepository.findByVerificationStatus(
                 VerificationStatus.PENDING,
-                PageRequest.of(pageNo,pageSize, Sort.by("createdDate").ascending())
+                PageRequest.of(pageNo - 1,pageSize)
         );
-
+        System.out.println(verifications.getTotalElements());
         return verifications.map(
                 item -> modelMapper.map(item,VerificationPendingResponseDto.class)
         );
