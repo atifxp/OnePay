@@ -28,7 +28,7 @@ public class LoanApplication {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private LoanType loanType;
+    private LoanType loanType = LoanType.PERSONAL;
 
     @NotNull
     private BigDecimal loanAmount;

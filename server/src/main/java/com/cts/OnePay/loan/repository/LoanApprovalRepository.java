@@ -11,12 +11,10 @@ import java.util.Optional;
 @Repository
 public interface LoanApprovalRepository extends JpaRepository<LoanApproval, Long> {
 
-    // Get approval record by loan ID
-    Optional<LoanApproval> findByLoanId_LoanId(Long loanId);
 
-    // Get all approvals handled by a specific officer
-    List<LoanApproval> findByOfficer_Id_UserId(Long officerId);
+    Optional<LoanApproval> findByLoanId(Long loanId);
 
-    // Get all approvals by status (APPROVED / REJECTED)
+    List<LoanApproval> findByOfficerId(Long officerId);
+
     List<LoanApproval> findByLoanStatus(LoanStatus loanStatus);
 }

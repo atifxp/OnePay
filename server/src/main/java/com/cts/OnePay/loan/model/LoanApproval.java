@@ -28,7 +28,7 @@ public class LoanApproval {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId",referencedColumnName = "userId")
-    private User officer_id;
+    private User officerId;
 
     @NotNull
     @Enumerated(EnumType.STRING)
