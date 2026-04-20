@@ -41,7 +41,7 @@ public class VerificationServiceImpl implements VerificationService{
 
 
         //check for existing verification request
-        Optional<Verification> exists = verificationRepository.findByUserId(userId);
+        Optional<Verification> exists = verificationRepository.findByUser_UserId(userId);
 
         if(exists.isPresent()){
             VerificationStatus status = exists.get().getVerificationStatus();
@@ -89,7 +89,7 @@ public class VerificationServiceImpl implements VerificationService{
         User verifierProxy = userRepository.getReferenceById(verifierId);
 
         //fetch verification object
-        Verification fetchedVerification = verificationRepository.findByUserId(userId)
+        Verification fetchedVerification = verificationRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Verification Request for the user does not exist"));
 
         //update verification status
@@ -110,7 +110,7 @@ public class VerificationServiceImpl implements VerificationService{
         User verifierProxy = userRepository.getReferenceById(verifierId);
 
         //fetch verification object
-        Verification fetchedVerification = verificationRepository.findByUserId(userId)
+        Verification fetchedVerification = verificationRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Verification Request for the user does not exist"));
 
         //update verification status

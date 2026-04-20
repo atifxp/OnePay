@@ -14,6 +14,6 @@ import java.util.Optional;
 @Repository
 public interface VerificationRepository extends JpaRepository<Verification,Long> {
 
-    Optional<Verification> findByUserId(Long userId);
+    Optional<Verification> findByUser_UserId(Long userId);
     Page<Verification> findByVerificationStatus(VerificationStatus status, Pageable page);
 }
