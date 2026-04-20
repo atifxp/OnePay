@@ -20,7 +20,7 @@ public class WalletServiceImpl implements WalletService{
 
     public WalletResponseDto createUserWallet(Long userId){
         if(walletRepository.existsByUser_UserId(userId)){
-            throw new WalletAlreadyExistsException("Wallet already exists for user");
+            throw new RuntimeException("Wallet already exists for user");
         }
 
         User user= userRepository.findById(userId)
