@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public UserResponseDto getProfile(Long userId){
-        UserResponseDto responseDto = userRepository.findByUserIdExceptPassword(userId);
+        User response = userRepository.findByUserId(userId);
 
-        if(responseDto == null)
+        if(response == null)
             throw new EntityNotFoundException("User does not Exist");
 
-        return responseDto;
+        return modelMapper.map(response, UserResponseDto.class);
     }
 
     @Transactional(rollbackFor = Exception.class)
