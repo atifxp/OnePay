@@ -2,13 +2,12 @@ package com.cts.OnePay.transaction.service;
 
 import com.cts.OnePay.transaction.dto.TransactionResponseDto;
 import com.cts.OnePay.transaction.dto.TransferRequestDto;
+import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 public interface TransactionService {
     public TransactionResponseDto transferMoney(Long senderUserId, TransferRequestDto requestDto);
-    public List<TransactionResponseDto> getMyTransactions(Long userId);
+    public Page<TransactionResponseDto> getMyTransactions(Long userId, int page, int size);
     public TransactionResponseDto getMyTransactionById(Long transactionId, Long userId);
-    public List<TransactionResponseDto> getAllTransactions();
+    public Page<TransactionResponseDto> getAllTransactions(int page, int size);
 }

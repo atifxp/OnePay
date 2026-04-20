@@ -11,6 +11,9 @@ import com.cts.OnePay.transaction.repository.WalletRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -73,9 +76,12 @@ public class TransactionServiceImpl implements TransactionService {
         return toDto(transaction);
     }
 
-    public List<TransactionResponseDto> getMyTransactions(Long userId){
-        ArrayList<TransactionResponseDto> transactions= new ArrayList<>();
-        return transactions;
+    public Page<TransactionResponseDto> getMyTransactions(Long userId, int page, int size){
+        Wallet wallet= walletRepository.findByUser_UserId(userId)
+                .orElseThrow(()-> new RuntimeException("Cannot find user wallet"));
+        Pageable pageable= PageRequest.of(page,size);
+        Page<Transaction> transactions=transactionRepository.findByWalletId(wallet.getWalletId(),pageable);
+        return transactions.map(txn->toDto(txn));
     }
 
     public TransactionResponseDto getMyTransactionById(Long transactionId, Long userId){
@@ -94,9 +100,10 @@ public class TransactionServiceImpl implements TransactionService {
         return toDto(transaction);
     }
 
-    public List<TransactionResponseDto> getAllTransactions(){
-        ArrayList<TransactionResponseDto> transactions= new ArrayList<>();
-        return transactions;
+    public Page<TransactionResponseDto> getAllTransactions(int page, int size){
+        Pageable pageable= PageRequest.of(page,size);
+        Page<Transaction> transactions=transactionRepository.findAll(pageable);
+        return transactions.map(txn->toDto(txn));
     }
 
     private TransactionResponseDto toDto(Transaction transaction){
