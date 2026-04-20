@@ -4,11 +4,11 @@ import com.cts.OnePay.loan.model.enums.LoanStatus;
 import com.cts.OnePay.loan.model.enums.LoanType;
 import com.cts.OnePay.user.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import java.math.BigDecimal;
 
 @Entity
