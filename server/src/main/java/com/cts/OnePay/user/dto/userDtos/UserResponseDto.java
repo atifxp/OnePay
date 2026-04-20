@@ -1,4 +1,4 @@
-package com.cts.OnePay.user.dto;
+package com.cts.OnePay.user.dto.userDtos;
 
 import com.cts.OnePay.user.model.enums.VerificationStatus;
 import com.cts.OnePay.user.model.enums.Role;

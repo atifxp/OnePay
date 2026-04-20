@@ -1,6 +1,6 @@
 package com.cts.OnePay.user.service;
 
-import com.cts.OnePay.user.dto.UserLoginRequestDto;
+import com.cts.OnePay.user.dto.userDtos.UserLoginRequestDto;
 import com.cts.OnePay.user.model.User;
 import com.cts.OnePay.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

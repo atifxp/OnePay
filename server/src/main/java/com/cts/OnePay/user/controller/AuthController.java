@@ -1,6 +1,6 @@
 package com.cts.OnePay.user.controller;
 
-import com.cts.OnePay.user.dto.UserResponseDto;
+import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.model.User;
 import com.cts.OnePay.user.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.cts.OnePay.user.dto;
+package com.cts.OnePay.user.dto.verificatioDtos;
 
 import com.cts.OnePay.user.model.enums.VerificationStatus;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.cts.OnePay.user.dto;
+package com.cts.OnePay.user.dto.userDtos;
 
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
