@@ -62,6 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTransactionStatus(TransactionStatus.COMPLETED);
         transaction.setInitiatedAt(initiationTime);
         transaction.setCompletedAt(LocalDateTime.now());
+        transaction.setMessage(requestDto.getMessage());
         transactionRepository.save(transaction);
 
         // Store in ledger for both user

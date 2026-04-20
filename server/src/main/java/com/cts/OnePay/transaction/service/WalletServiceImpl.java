@@ -28,6 +28,7 @@ public class WalletServiceImpl implements WalletService{
 
         Wallet wallet = new Wallet();
         wallet.setUser(user);
+        walletRepository.save(wallet);
 
         WalletResponseDto responseDto= modelMapper.map(wallet, WalletResponseDto.class);
         return responseDto;
