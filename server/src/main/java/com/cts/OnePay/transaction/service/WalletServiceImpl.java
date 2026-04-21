@@ -26,6 +26,8 @@ public class WalletServiceImpl implements WalletService{
         User user= userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
 
+
+
         Wallet wallet = new Wallet();
         wallet.setUser(user);
         walletRepository.save(wallet);
