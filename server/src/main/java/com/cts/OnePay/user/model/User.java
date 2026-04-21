@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class User extends Auditable {
     private String email;
 
     @NotNull
-    @Min(value = 10,message = "Phone number should be of 10 digits")
+    @Size(min = 10,message = "Phone number should be of 10 digits")
     private String phone;
 
     @NotNull

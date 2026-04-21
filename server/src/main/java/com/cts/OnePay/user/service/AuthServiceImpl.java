@@ -1,9 +1,11 @@
 package com.cts.OnePay.user.service;
 
 import com.cts.OnePay.user.dto.userDtos.UserLoginRequestDto;
+import com.cts.OnePay.user.dto.userDtos.UserRegisterRequest;
 import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.model.Session;
 import com.cts.OnePay.user.model.User;
+import com.cts.OnePay.user.model.enums.Role;
 import com.cts.OnePay.user.repository.SessionRepository;
 import com.cts.OnePay.user.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
@@ -36,13 +38,21 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public Map<String, String> register(User newUser){
+    public Map<String, String> register(UserRegisterRequest newUser){
         //check if user exists
         userRepository.findByPhone(newUser.getPhone())
-                .orElseThrow(()-> new EntityExistsException("User is already registered"));
+                .ifPresent(user -> {
+                    throw new EntityExistsException("User is already registered");
+                });
 
-        newUser.setPasswordHash(passwordEncoder.encode(newUser.getPasswordHash()));
-        userRepository.save(newUser);
+        User user = modelMapper.map(newUser, User.class);
+
+        //set default role
+        user.setRole(Role.CUSTOMER);
+
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+
+        userRepository.save(user);
         return Map.of("message", "Registration Successful");
 
     }
@@ -52,6 +62,8 @@ public class AuthServiceImpl implements AuthService{
 
         String accessToken = null;
         String refreshToken = null;
+
+        Map<String, Object> response = new HashMap<>();
 
         //check for user
         User exists = userRepository.findByPhone(user.getPhone())
@@ -79,14 +91,17 @@ public class AuthServiceImpl implements AuthService{
 
         }
 
-        return Map.of(
-                "accessToken", accessToken,
-                "user", modelMapper.map(exists, UserResponseDto.class),
-                "message", "Login Successful"
-        );
+        response.put("access-token",accessToken);
+        response.put("user", modelMapper.map(exists,UserResponseDto.class));
+        response.put("message", "Login Successful");
+
+        return response;
     }
 
     public Map<String, Object> refresh(String phoneNo){
+
+        Map<String, Object> response = new HashMap<>();
+
         //check if user exists or not
         User exists = userRepository.findByPhone(phoneNo)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -104,10 +119,10 @@ public class AuthServiceImpl implements AuthService{
         //refresh token not expired
         String newAccessToken = jwtService.generateAccessToken(exists);
 
-        return Map.of(
-                "access-token", newAccessToken,
-                "message", "Session Restored Successfully"
-        );
+        response.put("access-token",newAccessToken);
+        response.put("message", "Session Restored Successfully");
+
+        return response;
     }
 
     public Map<String,String> logout(Long userId){

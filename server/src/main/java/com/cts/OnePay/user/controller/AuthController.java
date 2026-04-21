@@ -1,11 +1,13 @@
 package com.cts.OnePay.user.controller;
 
 import com.cts.OnePay.user.dto.userDtos.UserLoginRequestDto;
+import com.cts.OnePay.user.dto.userDtos.UserRegisterRequest;
 import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.model.MyUserDetails;
 import com.cts.OnePay.user.model.User;
 import com.cts.OnePay.user.service.AuthService;
 import com.cts.OnePay.user.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -40,7 +42,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,String>> register(@Valid @RequestBody User user){
+    public ResponseEntity<Map<String,String>> register(@RequestBody @Valid UserRegisterRequest user){
         Map<String, String> response = authService.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -71,24 +73,39 @@ public class AuthController {
     public ResponseEntity<?> refresh(HttpServletRequest req){
 
         String accessToken = jwtService.extractCookie("access-token",req);
-        String phoneNo = jwtService.extractPhoneNo(accessToken);
+        String phoneNo = null;
+        ResponseCookie cookie = null;
+        Map<String,Object> response = new HashMap<>();
 
-        Map<String,Object> response = authService.refresh(phoneNo);
+        try{
+            phoneNo = jwtService.extractPhoneNo(accessToken);
+            response.put("message", "Session still active, no need to refresh");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response);
 
-        //set new cookie
+        } catch (ExpiredJwtException e) {
+            //get claims from exposed claims
+            phoneNo = e.getClaims().get("phone",String.class);
 
-        String token = response.get("access-token").toString();
-        long maxAgeSeconds =  refreshExpiration/1000;
+            response = authService.refresh(phoneNo);
+            //set new cookie
 
-        ResponseCookie cookie = ResponseCookie.from("access-token", token)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(maxAgeSeconds)      //age of cookie before browser deletes it
-                .build();
+            String newAccessToken = response.get("access-token").toString();
+            long maxAgeSeconds =  refreshExpiration/1000;
 
-        response.remove("access-token");
+            cookie = ResponseCookie.from("access-token", newAccessToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(maxAgeSeconds)      //age of cookie before browser deletes it
+                    .build();
+
+            response.remove("access-token");
+        }
+
+
+
+
 
         return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,cookie.toString()).body(response);
     }
@@ -97,7 +114,7 @@ public class AuthController {
     public ResponseEntity<?> logout(@AuthenticationPrincipal MyUserDetails userDetails, HttpServletRequest req, HttpServletResponse res){
 
         Map<String, String> response = authService.logout(userDetails.getUserId());
-        ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
+        ResponseCookie deleteCookie = ResponseCookie.from("access-token", "")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")

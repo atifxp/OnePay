@@ -1,24 +1,29 @@
 package com.cts.OnePay.user.dto.userDtos;
 
-import com.cts.OnePay.user.model.enums.Role;
-import com.cts.OnePay.user.model.enums.VerificationStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateRequestDto {
-
-    @NotNull(message = "Name cannot be null")
+@Getter
+@Setter
+public class UserRegisterRequest {
+    @NotNull
     private String fullName;
-    @Email(message = "Provide a valid email")
-    private String email;
-    private Role role;
 
+    @Email(message = "Please provide valid email")
+    @NotNull
+    private String email;
+
+    @NotNull
+    @Size(min = 10,message = "Phone number should be of 10 digits")
+    private String phone;
+
+    @NotNull
+    private String passwordHash;
 }
