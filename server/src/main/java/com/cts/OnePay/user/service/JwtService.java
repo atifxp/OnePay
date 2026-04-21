@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class JwtService {
                 .compact();
     }
 
-    private Claims extractClaims(String token){
+    public Claims extractClaims(String token){
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()
@@ -71,6 +73,11 @@ public class JwtService {
         return body.get("phone", String.class);
     }
 
+    public String extractUserId(String token){
+        Claims body = extractClaims(token);
+        return body.get("userId", String.class);
+    }
+
     public boolean validateToken(String token, UserDetails userDetails){
         return (extractPhoneNo(token).equalsIgnoreCase(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -79,4 +86,14 @@ public class JwtService {
         return extractClaims(token).getExpiration().before(new Date());
     }
 
+    public String extractCookie(String cookieName, HttpServletRequest request) {
+        if(request.getCookies() != null){
+            for(Cookie cookie: request.getCookies()){
+                if(cookieName.equals(cookie.getName()))
+                    return cookie.getValue();
+            }
+        }
+
+        return null;
+    }
 }

@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,6 +39,6 @@ public class Session extends Auditable {
     @NotNull
     private String ipAddress;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime expiresAt;
+    @NotNull
+    private Instant expiresAt;
 }
