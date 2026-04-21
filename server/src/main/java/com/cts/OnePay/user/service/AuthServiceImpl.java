@@ -110,12 +110,14 @@ public class AuthServiceImpl implements AuthService{
         );
     }
 
-    public void logout(Long userId){
+    public Map<String,String> logout(Long userId){
         //delete session
         Session session = sessionRepository.findByUser_UserId(userId)
                 .orElseThrow(()-> new SessionAuthenticationException("Session does not exist"));
 
         sessionRepository.delete(session);
+
+        return Map.of("message", "Logged out Successfully");
     }
 
 }

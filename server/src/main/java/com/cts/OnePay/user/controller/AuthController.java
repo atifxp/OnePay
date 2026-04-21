@@ -90,13 +90,13 @@ public class AuthController {
 
         response.remove("access-token");
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,cookie.toString()).body(response);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@AuthenticationPrincipal MyUserDetails userDetails, HttpServletRequest req, HttpServletResponse res){
 
-        authService.logout(userDetails.getUserId());
+        Map<String, String> response = authService.logout(userDetails.getUserId());
         ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
                 .httpOnly(true)
                 .secure(true)
@@ -105,7 +105,7 @@ public class AuthController {
                 .maxAge(0)
                 .build();
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,deleteCookie.toString()).body(response);
     }
 
 }

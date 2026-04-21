@@ -10,7 +10,7 @@ public interface AuthService {
     Map<String, String> register(User user);
     Map<String, Object> login(UserLoginRequestDto user, String ipAddress);
     Map<String, Object> refresh(String phoneNo);
-    void logout(Long userId);
+    Map<String, String> logout(Long userId);
 
 
 }
