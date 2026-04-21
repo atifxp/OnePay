@@ -18,19 +18,11 @@ frontend:
 server:
   port: 8081
 
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-expiration-ms: ${ACCESS_EXPIRATION}
+    refresh-expiration-ms: ${REFRESH_EXPIRATION}
 
 
 
-#  spring.datasource.url=${DATASOURCE_URL}
-#  spring.datasource.username=${DATASOURCE_USER}
-#  spring.datasource.password=${DATASOURCE_PASSWORD}
-#
-#  jwt.secret= ${SECRET_KEY}
-#
-#  frontend.url=${FRONTEND_URL}
-#
-#  spring.jpa.show-sql=true
-#  spring.jpa.hibernate.ddl-auto=update
-#
-#  #this is for loading .env file
-#  spring.config.import=optional:file:.env[.properties]

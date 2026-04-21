@@ -23,9 +23,6 @@ public class UserServiceImpl implements UserService {
         User response = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User does not Exist"));
 
-//        if(response == null)
-//            throw new EntityNotFoundException("User does not Exist");
-
         return modelMapper.map(response, UserResponseDto.class);
     }
 
@@ -37,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
         if (dto.getFullName() != null) user.setFullName(dto.getFullName());
         if (dto.getEmail() != null) user.setEmail(dto.getEmail());
-        if (dto.getPhone() != null) user.setPhone(dto.getPhone());
+        if (dto.getRole() != null) user.setRole(dto.getRole());
 
         //auto saved
 

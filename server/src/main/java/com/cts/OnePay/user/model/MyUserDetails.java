@@ -16,7 +16,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.user.getRole()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.user.getRole().name()));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getEmail();
+        return this.user.getPhone();
     }
 
     public Long getUserId(){

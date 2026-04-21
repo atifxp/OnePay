@@ -14,11 +14,7 @@ import lombok.Setter;
 public class UserUpdateRequestDto {
 
     private String fullName;
-
-
     private String email;
-
-
-    private String phone;
+    private Role role;
 
 }
