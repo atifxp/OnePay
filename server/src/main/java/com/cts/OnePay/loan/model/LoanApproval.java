@@ -26,7 +26,7 @@ public class LoanApproval {
     private LoanApplication loanId;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId",referencedColumnName = "userId")
     private User officerId;
 

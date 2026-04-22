@@ -16,9 +16,6 @@ public class LoanApprovalRequestDTO {
     @NotNull(message = "Loan ID is required")
     private Long loanId;
 
-    @NotNull(message = "Officer ID is required")
-    private Long officerId;
-
     @NotNull(message = "Loan status is required")
-    private LoanStatus loanStatus; // APPROVED or REJECTED
+    private LoanStatus loanStatus;
 }

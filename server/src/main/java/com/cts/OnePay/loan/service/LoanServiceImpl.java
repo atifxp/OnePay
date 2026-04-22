@@ -10,13 +10,16 @@ import com.cts.OnePay.loan.model.LoanApproval;
 import com.cts.OnePay.loan.model.enums.LoanStatus;
 import com.cts.OnePay.loan.repository.LoanApplicationRepository;
 import com.cts.OnePay.loan.repository.LoanApprovalRepository;
+import com.cts.OnePay.user.model.MyUserDetails;
 import com.cts.OnePay.user.model.User;
 import com.cts.OnePay.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,7 @@ public class LoanServiceImpl implements LoanService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO) {
         User user = userRepository.findById(requestDTO.getUserId())
@@ -79,12 +83,13 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanApprovalResponseDTO updateLoanStatus(LoanApprovalRequestDTO requestDTO) {
+    @Transactional
+    public LoanApprovalResponseDTO updateLoanStatus(LoanApprovalRequestDTO requestDTO, MyUserDetails userDetails) {
         LoanApplication loan = loanApplicationRepository.findById(requestDTO.getLoanId())
                 .orElseThrow(() -> new RuntimeException("Loan not found with ID: " + requestDTO.getLoanId()));
 
-        User officer = userRepository.findById(requestDTO.getOfficerId())
-                .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + requestDTO.getOfficerId()));
+        User officer = userRepository.findById(userDetails.getUserId())
+                .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + userDetails.getUserId()));
 
         if (loan.getLoanStatus() == LoanStatus.APPROVED || loan.getLoanStatus() == LoanStatus.REJECTED) {
             throw new RuntimeException("Loan is already " + loan.getLoanStatus() + " and cannot be updated.");
@@ -93,13 +98,25 @@ public class LoanServiceImpl implements LoanService {
         loan.setLoanStatus(requestDTO.getLoanStatus());
         loanApplicationRepository.save(loan);
 
-        LoanApproval approval = new LoanApproval();
-        approval.setLoanId(loan);
-        approval.setOfficerId(officer);
-        approval.setLoanStatus(requestDTO.getLoanStatus());
+        Optional<LoanApproval> existingApproval = loanApprovalRepository.findByLoanId_LoanId(requestDTO.getLoanId());
 
-        LoanApproval saved = loanApprovalRepository.save(approval);
-        return mapToApprovalResponse(saved);
+        LoanApproval approval;
+        if (existingApproval.isPresent()) {
+            loanApprovalRepository.updateApproval(
+                    requestDTO.getLoanId(),
+                    officer,
+                    requestDTO.getLoanStatus()
+            );
+            approval = loanApprovalRepository.findByLoanId_LoanId(requestDTO.getLoanId()).get();
+        } else {
+            approval = new LoanApproval();
+            approval.setLoanId(loan);
+            approval.setOfficerId(officer);
+            approval.setLoanStatus(requestDTO.getLoanStatus());
+            approval = loanApprovalRepository.save(approval);
+        }
+
+        return mapToApprovalResponse(approval);
     }
 
     private LoanApplicationResponseDTO mapToApplicationResponse(LoanApplication loan) {
@@ -109,9 +126,11 @@ public class LoanServiceImpl implements LoanService {
     }
 
     private LoanApprovalResponseDTO mapToApprovalResponse(LoanApproval approval) {
-        LoanApprovalResponseDTO responseDTO = modelMapper.map(approval, LoanApprovalResponseDTO.class);
+        LoanApprovalResponseDTO responseDTO = new LoanApprovalResponseDTO();
+        responseDTO.setApprovalId(approval.getApprovalId());
         responseDTO.setLoanId(approval.getLoanId().getLoanId());
         responseDTO.setOfficerId(approval.getOfficerId().getUserId());
+        responseDTO.setLoanStatus(approval.getLoanStatus());
         return responseDTO;
     }
 }
