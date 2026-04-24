@@ -1,0 +1,139 @@
+<div class="min-h-screen bg-gray-50 px-6 py-10">
+  <div class="max-w-3xl mx-auto space-y-4">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Transactions</h1>
+        <p class="text-sm text-gray-500 mt-1">Your sent payments</p>
+      </div>
+      <button
+        (click)="showTransferForm.set(!showTransferForm())"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+      >
+        {{ showTransferForm() ? 'Cancel' : 'Send Money' }}
+      </button>
+    </div>
+
+    <!-- Transfer form -->
+    @if (showTransferForm()) {
+      <div class="bg-white border border-gray-200 rounded-xl p-6">
+        <h2 class="text-base font-semibold text-gray-800 mb-4">Send Money</h2>
+
+        @if (transferError()) {
+          <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+            {{ transferError() }}
+          </div>
+        }
+        @if (transferSuccess()) {
+          <div class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4">
+            {{ transferSuccess() }}
+          </div>
+        }
+
+        <form (ngSubmit)="onTransfer()" #transferForm="ngForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Receiver User ID</label>
+            <input
+              type="number"
+              name="receiverUserId"
+              [(ngModel)]="receiverUserId"
+              required
+              min="1"
+              placeholder="Enter receiver's user ID"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
+            <input
+              type="number"
+              name="amount"
+              [(ngModel)]="amount"
+              required
+              min="1"
+              placeholder="Enter amount"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Note</label>
+            <input
+              type="text"
+              name="transferMessage"
+              [(ngModel)]="transferMessage"
+              required
+              placeholder="What's this for?"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          <button
+            type="submit"
+            [disabled]="transferring() || transferForm.invalid"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg py-2 text-sm font-medium transition-colors"
+          >
+            {{ transferring() ? 'Sending...' : 'Send' }}
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Transactions list -->
+    @if (loading()) {
+      <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
+        <p class="text-sm text-gray-400">Loading transactions...</p>
+      </div>
+    } @else if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3">
+        {{ error() }}
+      </div>
+    } @else if (transactions().length === 0) {
+      <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
+        <p class="text-gray-500 text-sm">No transactions yet.</p>
+      </div>
+    } @else {
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        @for (txn of transactions(); track txn.transactionId) {
+          <a
+            [routerLink]="['/transactions', txn.transactionId]"
+            class="flex items-center justify-between px-5 py-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+          >
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800 truncate">
+                To: {{ txn.receiverWallet.userFullName }}
+              </p>
+              <p class="text-xs text-gray-400 mt-0.5">{{ txn.message }}</p>
+              <p class="text-xs text-gray-400">{{ formatDate(txn.initiatedAt) }}</p>
+            </div>
+            <div class="flex flex-col items-end gap-1 ml-4">
+              <span class="text-sm font-semibold text-gray-900">- ₹{{ txn.amount }}</span>
+              <span class="text-xs border px-2 py-0.5 rounded-full {{ statusClass(txn.transactionStatus) }}">
+                {{ txn.transactionStatus }}
+              </span>
+            </div>
+          </a>
+        }
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <button
+          (click)="prevPage()"
+          [disabled]="page === 0"
+          class="px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-50 transition-colors"
+        >
+          Previous
+        </button>
+        <span>Page {{ page + 1 }} of {{ totalPages() }}</span>
+        <button
+          (click)="nextPage()"
+          [disabled]="page >= totalPages() - 1"
+          class="px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-50 transition-colors"
+        >
+          Next
+        </button>
+      </div>
+    }
+
+  </div>
+</div>
