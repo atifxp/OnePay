@@ -9,20 +9,25 @@ import { VerificationService, VerificationPending } from '../../../services/veri
   template: `
     <div class="min-h-screen bg-gray-50 px-4 py-8">
       <div class="max-w-4xl mx-auto">
-
         <div class="mb-6">
           <h1 class="text-2xl font-semibold text-gray-900">Pending Verifications</h1>
-          <p class="text-sm text-gray-500 mt-1">Review and action user identity verification requests</p>
+          <p class="text-sm text-gray-500 mt-1">
+            Review and action user identity verification requests
+          </p>
         </div>
 
         @if (error()) {
-          <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+          <div
+            class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
             {{ error() }}
           </div>
         }
 
         @if (successMsg()) {
-          <div class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4">
+          <div
+            class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
             {{ successMsg() }}
           </div>
         }
@@ -38,17 +43,20 @@ import { VerificationService, VerificationPending } from '../../../services/veri
             @for (item of items(); track item.verificationId) {
               <div class="bg-white border border-gray-200 rounded-xl shadow-sm px-5 py-4">
                 <div class="flex items-start justify-between gap-4">
-
                   <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-gray-900">{{ item.user.fullName }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">{{ item.user.email }} · {{ item.user.phone }}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                      {{ item.user.email }} · {{ item.user.phone }}
+                    </p>
                     <p class="text-xs text-gray-400 mt-1">
                       {{ item.docType }} · {{ item.docNumber }}
                     </p>
                   </div>
 
                   <div class="flex items-center gap-2 shrink-0">
-                    <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700">
+                    <span
+                      class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700"
+                    >
                       {{ item.verificationStatus }}
                     </span>
                     <button
@@ -66,7 +74,6 @@ import { VerificationService, VerificationPending } from '../../../services/veri
                       Reject
                     </button>
                   </div>
-
                 </div>
               </div>
             }
@@ -94,10 +101,9 @@ import { VerificationService, VerificationPending } from '../../../services/veri
             </div>
           </div>
         }
-
       </div>
     </div>
-  `
+  `,
 })
 export class AdminVerificationComponent implements OnInit {
   items = signal<VerificationPending[]>([]);
@@ -122,14 +128,14 @@ export class AdminVerificationComponent implements OnInit {
     this.verificationService.getPending(this.page(), this.pageSize).subscribe({
       next: (res) => {
         this.items.set(res.content);
-        this.totalPages.set(res.totalPages);
-        this.totalElements.set(res.totalElements);
+        this.totalPages.set(res.page.totalPages);
+        this.totalElements.set(res.page.totalElements);
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to load verifications.');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -141,14 +147,14 @@ export class AdminVerificationComponent implements OnInit {
       next: (res) => {
         this.successMsg.set(res.message || 'User approved.');
         this.acting.set(null);
-        this.items.update(list => list.filter(i => i.user.userId !== userId));
-        this.totalElements.update(n => n - 1);
+        this.items.update((list) => list.filter((i) => i.user.userId !== userId));
+        this.totalElements.update((n) => n - 1);
         setTimeout(() => this.successMsg.set(''), 3000);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to approve.');
         this.acting.set(null);
-      }
+      },
     });
   }
 
@@ -160,24 +166,24 @@ export class AdminVerificationComponent implements OnInit {
       next: (res) => {
         this.successMsg.set(res.message || 'User rejected.');
         this.acting.set(null);
-        this.items.update(list => list.filter(i => i.user.userId !== userId));
-        this.totalElements.update(n => n - 1);
+        this.items.update((list) => list.filter((i) => i.user.userId !== userId));
+        this.totalElements.update((n) => n - 1);
         setTimeout(() => this.successMsg.set(''), 3000);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to reject.');
         this.acting.set(null);
-      }
+      },
     });
   }
 
   prevPage(): void {
-    this.page.update(p => p - 1);
+    this.page.update((p) => p - 1);
     this.loadPage();
   }
 
   nextPage(): void {
-    this.page.update(p => p + 1);
+    this.page.update((p) => p + 1);
     this.loadPage();
   }
 }

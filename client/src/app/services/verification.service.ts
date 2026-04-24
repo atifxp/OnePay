@@ -19,10 +19,12 @@ export interface VerificationPending {
 
 export interface SpringPage<T> {
   content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
+  page: {
+    totalElements: number;
+    totalPages: number;
+    number: number;
+    size: number;
+  };
 }
 
 const OPTIONS = { withCredentials: true };

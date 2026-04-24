@@ -50,11 +50,19 @@ export class DashboardComponent implements OnInit {
   }
 
   formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
   }
 
   statusColor(status: string): string {
-    return status === 'COMPLETED' ? 'text-green-600' : status === 'FAILED' ? 'text-red-500' : 'text-yellow-500';
+    return status === 'COMPLETED'
+      ? 'text-green-600'
+      : status === 'FAILED'
+        ? 'text-red-500'
+        : 'text-yellow-500';
   }
 
   isCredit(tx: Transaction): boolean {
