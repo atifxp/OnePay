@@ -26,8 +26,9 @@ public class LoanController {
 
     @PostMapping("/apply")
     public ResponseEntity<LoanApplicationResponseDTO> applyLoan(
-            @Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
-        LoanApplicationResponseDTO response = loanService.applyLoan(requestDTO);
+            @Valid @RequestBody LoanApplicationRequestDTO requestDTO,
+            @AuthenticationPrincipal MyUserDetails userDetails) {
+        LoanApplicationResponseDTO response = loanService.applyLoan(requestDTO, userDetails.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -45,10 +46,10 @@ public class LoanController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<LoanApplicationResponseDTO>> getLoansByUser(
-            @PathVariable Long userId) {
-        List<LoanApplicationResponseDTO> response = loanService.getLoansByUser(userId);
+    @GetMapping("/my-loans")
+    public ResponseEntity<List<LoanApplicationResponseDTO>> getMyLoans(
+            @AuthenticationPrincipal MyUserDetails userDetails) {
+        List<LoanApplicationResponseDTO> response = loanService.getLoansByUser(userDetails.getUserId());
         return ResponseEntity.ok(response);
     }
 

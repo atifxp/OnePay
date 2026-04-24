@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface LoanService {
 
-    LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO);
+    LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO, Long userId);
 
     LoanApplicationResponseDTO getLoanById(Long loanId);
 

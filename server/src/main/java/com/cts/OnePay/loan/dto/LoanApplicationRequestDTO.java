@@ -17,9 +17,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class LoanApplicationRequestDTO {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
-
     @NotNull(message = "Loan type is required")
     private LoanType loanType;
 

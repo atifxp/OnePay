@@ -1,8 +1,147 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LoanService, LoanApplication, LoanStatus } from '../../../services/loan.service';
 
 @Component({
   selector: 'app-admin-loans',
   standalone: true,
-  template: `<h1>Admin - Loan Management</h1>`
+  imports: [FormsModule],
+  template: `
+    <div class="min-h-screen bg-gray-50 px-4 py-8">
+      <div class="max-w-4xl mx-auto">
+
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-900">Loan Management</h1>
+          <p class="text-sm text-gray-500 mt-1">Review and update loan application statuses</p>
+        </div>
+
+        @if (error()) {
+          <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+            {{ error() }}
+          </div>
+        }
+
+        @if (successMsg()) {
+          <div class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4">
+            {{ successMsg() }}
+          </div>
+        }
+
+        @if (loading()) {
+          <div class="text-center py-12 text-gray-400 text-sm">Loading...</div>
+        } @else if (loans().length === 0) {
+          <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-8 text-center">
+            <p class="text-gray-500 text-sm">No loan applications found.</p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (loan of loans(); track loan.loanId) {
+              <div class="bg-white border border-gray-200 rounded-xl shadow-sm px-5 py-4">
+                <div class="flex items-start justify-between gap-4">
+
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <p class="text-sm font-medium text-gray-900">{{ loan.loanType }} Loan</p>
+                      <span class="text-xs font-medium px-2 py-0.5 rounded-full {{ statusClass(loan.loanStatus) }}">
+                        {{ loan.loanStatus }}
+                      </span>
+                    </div>
+                    <p class="text-xs text-gray-500">
+                      ₹{{ formatAmount(loan.loanAmount) }} · {{ loan.tenureMonth }} months · {{ loan.interestRate }}% p.a.
+                    </p>
+                    <p class="text-xs text-gray-400 mt-0.5">User #{{ loan.userId }} · Loan #{{ loan.loanId }}</p>
+                    @if (loan.purpose) {
+                      <p class="text-xs text-gray-400 mt-0.5 truncate">Purpose: {{ loan.purpose }}</p>
+                    }
+                  </div>
+
+                  <div class="flex items-center gap-2 shrink-0">
+                    <select
+                      [name]="'status-' + loan.loanId"
+                      [(ngModel)]="selectedStatus[loan.loanId]"
+                      class="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
+                    >
+                      <option value="SUBMITTED">Submitted</option>
+                      <option value="UNDER_REVIEW">Under Review</option>
+                      <option value="APPROVED">Approved</option>
+                      <option value="REJECTED">Rejected</option>
+                    </select>
+                    <button
+                      (click)="updateStatus(loan.loanId)"
+                      [disabled]="updating() === loan.loanId"
+                      class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                    >
+                      {{ updating() === loan.loanId ? '...' : 'Update' }}
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  `
 })
-export class AdminLoansComponent {}
+export class AdminLoansComponent implements OnInit {
+  loans = signal<LoanApplication[]>([]);
+  loading = signal(true);
+  updating = signal<number | null>(null);
+  error = signal('');
+  successMsg = signal('');
+  selectedStatus: Record<number, LoanStatus> = {};
+
+  constructor(private loanService: LoanService) {}
+
+  ngOnInit(): void {
+    this.loanService.getAll().subscribe({
+      next: (loans) => {
+        this.loans.set(loans);
+        loans.forEach(l => this.selectedStatus[l.loanId] = l.loanStatus);
+        this.loading.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set(err.error?.message || 'Failed to load loans.');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  updateStatus(loanId: number): void {
+    this.error.set('');
+    this.successMsg.set('');
+    this.updating.set(loanId);
+
+    this.loanService.updateStatus({ loanId, loanStatus: this.selectedStatus[loanId] }).subscribe({
+      next: (res) => {
+        this.loans.update(list =>
+          list.map(l => l.loanId === loanId ? { ...l, loanStatus: res.loanStatus } : l)
+        );
+        this.successMsg.set(`Loan #${loanId} updated to ${res.loanStatus}.`);
+        this.updating.set(null);
+        setTimeout(() => this.successMsg.set(''), 3000);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set(err.error?.message || 'Failed to update status.');
+        this.updating.set(null);
+      }
+    });
+  }
+
+  formatAmount(amount: number): string {
+    return amount.toLocaleString('en-IN');
+  }
+
+  statusClass(status: string): string {
+    const map: Record<string, string> = {
+      APPROVED: 'bg-green-50 text-green-700',
+      REJECTED: 'bg-red-50 text-red-700',
+      UNDER_REVIEW: 'bg-yellow-50 text-yellow-700',
+      SUBMITTED: 'bg-blue-50 text-blue-700',
+    };
+    return map[status] ?? 'bg-gray-100 text-gray-600';
+  }
+}

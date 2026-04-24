@@ -39,9 +39,9 @@ public class LoanServiceImpl implements LoanService {
 
     @Transactional
     @Override
-    public LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO) {
-        User user = userRepository.findById(requestDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + requestDTO.getUserId()));
+    public LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         LoanApplication loan = modelMapper.map(requestDTO, LoanApplication.class);
         loan.setUser(user);
