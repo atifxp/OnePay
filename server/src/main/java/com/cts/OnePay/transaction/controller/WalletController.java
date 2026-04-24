@@ -3,9 +3,11 @@ package com.cts.OnePay.transaction.controller;
 import com.cts.OnePay.transaction.dto.CreateWalletRequestDto;
 import com.cts.OnePay.transaction.dto.WalletResponseDto;
 import com.cts.OnePay.transaction.service.WalletService;
+import com.cts.OnePay.user.model.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +25,8 @@ public class WalletController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<WalletResponseDto> getUserWallet(){
-        // TODO: Extract userId from security context
-        Long userId= 1L;
-        WalletResponseDto responseDto= walletService.getUserWallet(userId);
+    public ResponseEntity<WalletResponseDto> getUserWallet(@AuthenticationPrincipal MyUserDetails userDetails){
+        WalletResponseDto responseDto= walletService.getUserWallet(userDetails.getUserId());
         return ResponseEntity.ok(responseDto);
     }
 }

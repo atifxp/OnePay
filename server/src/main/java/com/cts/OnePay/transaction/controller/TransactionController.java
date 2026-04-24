@@ -16,26 +16,20 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionResponseDto> transfer(@RequestBody @Validated TransferRequestDto requestDto){
-        // TODO: Extract userId from security context
-        Long userId= 1L;
-        TransactionResponseDto responseDto= transactionService.transferMoney(userId,requestDto);
+    public ResponseEntity<TransactionResponseDto> transfer(@RequestBody @Validated TransferRequestDto requestDto,@AuthenticationPrincipal MyUserDetails userDetails){
+        TransactionResponseDto responseDto= transactionService.transferMoney(userDetails.getUserId(),requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Page<TransactionResponseDto>>  getMyTransactions(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
-        // TODO: Extract userId from security context
-        Long userId= 1L;
-        Page<TransactionResponseDto> transactions= transactionService.getMyTransactions(userId,page,size);
+    public ResponseEntity<Page<TransactionResponseDto>>  getMyTransactions(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,@AuthenticationPrincipal MyUserDetails userDetails){
+        Page<TransactionResponseDto> transactions= transactionService.getMyTransactions(userDetails.getUserId(),page,size);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{transactionId}")
-    public ResponseEntity<TransactionResponseDto>  getMyTransactions(@PathVariable Long transactionId){
-        // TODO: Extract userId from security context
-        Long userId= 1L;
-        TransactionResponseDto transaction= transactionService.getMyTransactionById(transactionId,userId);
+    public ResponseEntity<TransactionResponseDto>  getMyTransactions(@PathVariable Long transactionId,@AuthenticationPrincipal MyUserDetails userDetails){
+        TransactionResponseDto transaction= transactionService.getMyTransactionById(transactionId,userDetails.getUserId());
         return ResponseEntity.ok(transaction);
     }
 
