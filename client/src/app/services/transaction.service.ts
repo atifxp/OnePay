@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
-export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'FAILED';
-
 export interface WalletSummary {
   walletId: number;
   userId: number;
@@ -15,7 +13,7 @@ export interface Transaction {
   senderWallet: WalletSummary;
   receiverWallet: WalletSummary;
   amount: number;
-  transactionStatus: TransactionStatus;
+  transactionStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
   message: string;
   initiatedAt: string;
   completedAt: string | null;
@@ -29,12 +27,6 @@ export interface SpringPage<T> {
   size: number;
 }
 
-export interface TransferRequest {
-  receiverUserId: number;
-  amount: number;
-  message?: string;
-}
-
 const OPTIONS = { withCredentials: true };
 
 @Injectable({ providedIn: 'root' })
@@ -43,19 +35,23 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
-  transfer(data: TransferRequest) {
-    return this.http.post<Transaction>(`${this.api}/transfer`, data, OPTIONS);
+  transfer(receiverUserId: number, amount: number, message: string) {
+    return this.http.post<Transaction>(`${this.api}/transfer`, { receiverUserId, amount, message }, OPTIONS);
   }
 
-  getMyTransactions(pageNo: number, pageSize: number) {
-    return this.http.get<SpringPage<Transaction>>(`${this.api}/?page=${pageNo}&size=${pageSize}`, OPTIONS);
+  getMyTransactions(page = 0, size = 10) {
+    return this.http.get<SpringPage<Transaction>>(`${this.api}/`, { ...OPTIONS, params: { page, size } });
   }
 
-  getById(transactionId: number) {
+  getTransactionById(transactionId: number) {
     return this.http.get<Transaction>(`${this.api}/${transactionId}`, OPTIONS);
   }
 
-  getAll(pageNo: number, pageSize: number) {
-    return this.http.get<SpringPage<Transaction>>(`${this.api}/all?page=${pageNo}&size=${pageSize}`, OPTIONS);
+  getAllTransactions(page = 0, size = 10) {
+    return this.http.get<SpringPage<Transaction>>(`${this.api}/all`, { ...OPTIONS, params: { page, size } });
+  }
+
+  getAll(page = 0, size = 10) {
+    return this.getAllTransactions(page, size);
   }
 }
