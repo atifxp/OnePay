@@ -50,4 +50,8 @@ export class TransactionService {
   getAllTransactions(page = 0, size = 10) {
     return this.http.get<SpringPage<Transaction>>(`${this.api}/all`, { ...OPTIONS, params: { page, size } });
   }
+
+  getAll(page = 0, size = 10) {
+    return this.getAllTransactions(page, size);
+  }
 }
