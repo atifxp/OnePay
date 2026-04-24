@@ -37,7 +37,7 @@ export class VerificationService {
     return this.http.post<{ message: string; status: string }>(
       `${this.api}/submit`,
       { docType, docNumber },
-      OPTIONS
+      OPTIONS,
     );
   }
 
@@ -48,7 +48,7 @@ export class VerificationService {
   getPending(pageNo: number, pageSize: number) {
     return this.http.get<SpringPage<VerificationPending>>(
       `${this.api}/pending/${pageNo}/${pageSize}`,
-      OPTIONS
+      OPTIONS,
     );
   }
 
@@ -56,7 +56,7 @@ export class VerificationService {
     return this.http.patch<{ message: string }>(
       `${this.api}/${userId}/approve`,
       { verificationStatus: 'VERIFIED' },
-      OPTIONS
+      OPTIONS,
     );
   }
 
@@ -64,7 +64,7 @@ export class VerificationService {
     return this.http.patch<{ message: string }>(
       `${this.api}/${userId}/reject`,
       { verificationStatus: 'REJECTED' },
-      OPTIONS
+      OPTIONS,
     );
   }
 }

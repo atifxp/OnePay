@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-gray-800">OnePay</h1>
+    <div class="flex items-center gap-4">
+      @if (user()) {
+        <span class="text-sm text-gray-600">{{ user()!.fullName }}</span>
+        <span class="text-xs px-2 py-1 rounded-full font-medium"
+          [class]="user()!.accountStatus === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'">
+          {{ user()!.accountStatus }}
+        </span>
+      }
+      <a routerLink="/profile" class="text-sm text-blue-600 hover:underline">Profile</a>
+      <button (click)="logout()" class="text-sm text-red-500 hover:underline">Logout</button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Welcome -->
+    @if (user()) {
+      <p class="text-gray-500 text-sm">Welcome back, <span class="font-medium text-gray-800">{{ user()!.fullName }}</span></p>
+    }
+
+    <!-- Wallet Balance -->
+    <div class="bg-blue-600 rounded-2xl p-6 text-white">
+      <p class="text-blue-200 text-sm mb-1">Wallet Balance</p>
+      @if (wallet()) {
+        <p class="text-4xl font-bold">{{ formatCurrency(wallet()!.balance) }}</p>
+        <p class="text-blue-200 text-xs mt-2">{{ wallet()!.currency }} · Wallet #{{ wallet()!.walletId }}</p>
+      } @else if (walletError()) {
+        <p class="text-blue-200 text-sm">{{ walletError() }}</p>
+        <a routerLink="/wallet" class="mt-2 inline-block text-white underline text-sm">Set up wallet</a>
+      } @else {
+        <p class="text-blue-200 text-sm">Loading...</p>
+      }
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-4 gap-3">
+      <a routerLink="/transactions"
+        class="flex flex-col items-center gap-2 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition text-center">
+        <span class="text-2xl">↔</span>
+        <span class="text-xs text-gray-600 font-medium">Transactions</span>
+      </a>
+      <a routerLink="/wallet"
+        class="flex flex-col items-center gap-2 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition text-center">
+        <span class="text-2xl">👛</span>
+        <span class="text-xs text-gray-600 font-medium">Wallet</span>
+      </a>
+      <a routerLink="/loans"
+        class="flex flex-col items-center gap-2 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition text-center">
+        <span class="text-2xl">🏦</span>
+        <span class="text-xs text-gray-600 font-medium">Loans</span>
+      </a>
+      <a routerLink="/verification/status"
+        class="flex flex-col items-center gap-2 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition text-center">
+        <span class="text-2xl">✅</span>
+        <span class="text-xs text-gray-600 font-medium">Verify</span>
+      </a>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h2 class="font-semibold text-gray-800">Recent Transactions</h2>
+        <a routerLink="/transactions" class="text-sm text-blue-600 hover:underline">View all</a>
+      </div>
+
+      @if (loading()) {
+        <p class="text-sm text-gray-400 px-5 py-6 text-center">Loading...</p>
+      } @else if (recentTransactions().length === 0) {
+        <p class="text-sm text-gray-400 px-5 py-6 text-center">No transactions yet.</p>
+      } @else {
+        <ul class="divide-y divide-gray-50">
+          @for (tx of recentTransactions(); track tx.transactionId) {
+            <li class="px-5 py-4 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-800">
+                  {{ isCredit(tx) ? tx.senderWallet.userFullName : tx.receiverWallet.userFullName }}
+                </p>
+                <p class="text-xs text-gray-400">{{ formatDate(tx.initiatedAt) }} · {{ tx.message || '—' }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-semibold" [class]="isCredit(tx) ? 'text-green-600' : 'text-gray-800'">
+                  {{ isCredit(tx) ? '+' : '-' }}{{ formatCurrency(tx.amount) }}
+                </p>
+                <p class="text-xs" [class]="statusColor(tx.transactionStatus)">{{ tx.transactionStatus }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+  </main>
+</div>

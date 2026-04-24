@@ -1,7 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { UserService, UserProfile } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -11,9 +13,12 @@ import { UserService, UserProfile } from '../../services/user.service';
     <div class="min-h-screen bg-gray-50 px-4 py-8">
       <div class="max-w-lg mx-auto">
 
-        <div class="mb-6">
-          <h1 class="text-2xl font-semibold text-gray-900">Profile</h1>
-          <p class="text-sm text-gray-500 mt-1">View and update your account details</p>
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-semibold text-gray-900">Profile</h1>
+            <p class="text-sm text-gray-500 mt-1">View and update your account details</p>
+          </div>
+          <button (click)="logout()" class="text-sm text-red-500 hover:underline">Logout</button>
         </div>
 
         @if (loadError()) {
@@ -122,7 +127,11 @@ export class ProfileComponent implements OnInit {
   fullName = '';
   email = '';
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.userService.getProfile().subscribe({
@@ -155,6 +164,13 @@ export class ProfileComponent implements OnInit {
         this.saveError.set(err.error?.message || 'Failed to update profile.');
         this.saving.set(false);
       }
+    });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
     });
   }
 
