@@ -1,5 +1,6 @@
 package com.cts.OnePay.user.service;
 
+import com.cts.OnePay.transaction.service.WalletService;
 import com.cts.OnePay.user.dto.verificatioDtos.VerificationPendingResponseDto;
 import com.cts.OnePay.user.dto.verificatioDtos.VerificationRequestDto;
 import com.cts.OnePay.user.dto.verificatioDtos.VerificationUpdateRequestDto;
@@ -28,6 +29,9 @@ public class VerificationServiceImpl implements VerificationService{
 
     @Autowired
     private VerificationRepository verificationRepository;
+
+    @Autowired
+    private WalletService walletService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -95,6 +99,8 @@ public class VerificationServiceImpl implements VerificationService{
         //update verification status
         fetchedVerification.setVerificationStatus(updates.getVerificationStatus());
         fetchedVerification.setVerifier(verifierProxy);
+
+        walletService.createUserWallet(userId);
 
         return Map.of("message", "User "+ user.getFullName() +" verified successfully");
     }
