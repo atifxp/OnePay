@@ -130,7 +130,7 @@ public class VerificationServiceImpl implements VerificationService{
 
         Page<Verification> verifications = verificationRepository.findByVerificationStatus(
                 VerificationStatus.PENDING,
-                PageRequest.of(pageNo - 1,pageSize)
+                PageRequest.of(pageNo,pageSize)
         );
         System.out.println(verifications.getTotalElements());
         return verifications.map(
