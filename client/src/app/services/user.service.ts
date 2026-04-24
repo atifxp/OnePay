@@ -16,6 +16,11 @@ export interface UserUpdateRequest {
   email: string;
 }
 
+export interface UserPromoteRequest {
+  userId: number;
+  role: string;
+}
+
 const OPTIONS = { withCredentials: true };
 
 @Injectable({ providedIn: 'root' })
@@ -30,5 +35,13 @@ export class UserService {
 
   updateProfile(data: UserUpdateRequest) {
     return this.http.patch<UserProfile>(`${this.api}/me`, data, OPTIONS);
+  }
+
+  getById(userId: number) {
+    return this.http.get<UserProfile>(`${this.api}/get/${userId}`, OPTIONS);
+  }
+
+  promoteUser(data: UserPromoteRequest) {
+    return this.http.post<{ message: string }>(`${this.api}/promote`, data, OPTIONS);
   }
 }

@@ -118,4 +118,12 @@ export const routes: Routes = [
       ),
     canActivate: [adminGuard],
   },
+  {
+    path: 'admin/promote',
+    loadComponent: () =>
+      import('./pages/admin/promote-user/promote-user.component').then(
+        (m) => m.PromoteUserComponent,
+      ),
+    canActivate: [adminGuard],
+  },
 ];

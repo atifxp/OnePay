@@ -1,5 +1,6 @@
 package com.cts.OnePay.user.service;
 
+import com.cts.OnePay.user.dto.userDtos.UserPromoteRequestDto;
 import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.dto.userDtos.UserUpdateRequestDto;
 import com.cts.OnePay.user.model.User;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -17,6 +20,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Override
+    public UserResponseDto getById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new EntityNotFoundException("User Not Found"));
+        return modelMapper.map(user,UserResponseDto.class);
+    }
 
     @Transactional(readOnly = true)
     public UserResponseDto getProfile(Long userId){
@@ -41,5 +51,12 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, String> promoteUser(UserPromoteRequestDto dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(()-> new EntityNotFoundException("User Not Found"));
+        user.setRole(dto.getRole());
+        return Map.of("message", "User "+user.getFullName()+" successfully promoted");
+    }
 }

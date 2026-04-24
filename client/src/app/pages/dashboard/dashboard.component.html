@@ -75,6 +75,29 @@
           </div>
           <span class="text-gray-400 text-lg shrink-0">→</span>
         </a>
+
+        <!-- Promote User -->
+        @if (user()!.role === 'ADMIN') {
+          <a
+            routerLink="/admin/promote"
+            class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 text-2xl shrink-0"
+            >
+              👤
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-900 group-hover:text-purple-700 transition">
+                Promote User
+              </p>
+              <p class="text-sm text-gray-500 mt-0.5">
+                Look up a user by ID, then assign a new role.
+              </p>
+            </div>
+            <span class="text-gray-400 text-lg shrink-0">→</span>
+          </a>
+        }
       </div>
     </main>
   }

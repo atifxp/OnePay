@@ -1,12 +1,15 @@
 package com.cts.OnePay.user.controller;
 
+import com.cts.OnePay.user.dto.userDtos.UserPromoteRequestDto;
 import com.cts.OnePay.user.dto.userDtos.UserResponseDto;
 import com.cts.OnePay.user.dto.userDtos.UserUpdateRequestDto;
 import com.cts.OnePay.user.model.MyUserDetails;
 import com.cts.OnePay.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +32,17 @@ public class UserController {
         Long userId = userDetails.getUserId();
         UserResponseDto response = userService.updateProfile(userId,dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+
+    @PostMapping("/promote")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> promoteUsers(@RequestBody @Valid UserPromoteRequestDto dto){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.promoteUser(dto));
+    }
+
+    @GetMapping("/get/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getById(@PathVariable("userId") Long userId){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.getById(userId));
     }
 }
