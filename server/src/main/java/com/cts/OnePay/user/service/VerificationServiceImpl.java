@@ -37,7 +37,6 @@ public class VerificationServiceImpl implements VerificationService{
     private ModelMapper modelMapper;
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public Map<String, String> submitDoc(Long userId,VerificationRequestDto verificationRequest) {
         //check for user
         User user = userRepository.findById(userId)
@@ -58,8 +57,13 @@ public class VerificationServiceImpl implements VerificationService{
                 throw new IllegalStateException("User is already verified");
             }
 
+            if(status == VerificationStatus.REJECTED){
+                //delete previous entry
+                verificationRepository.deleteById(exists.get().getVerificationId());
+            }
+
         }
-        //create new verification entry if not exists
+        //create new verification entry if not exists or rejected
         Verification newRequest = new Verification();
         newRequest.setUser(user);
         newRequest.setDocNumber(verificationRequest.getDocNumber());
@@ -100,6 +104,7 @@ public class VerificationServiceImpl implements VerificationService{
         fetchedVerification.setVerificationStatus(updates.getVerificationStatus());
         fetchedVerification.setVerifier(verifierProxy);
 
+        //create wallet
         walletService.createUserWallet(userId);
 
         return Map.of("message", "User "+ user.getFullName() +" verified successfully");
@@ -118,6 +123,7 @@ public class VerificationServiceImpl implements VerificationService{
         //fetch verification object
         Verification fetchedVerification = verificationRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Verification Request for the user does not exist"));
+
 
         //update verification status
         fetchedVerification.setVerificationStatus(updates.getVerificationStatus());

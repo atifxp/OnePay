@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth-guard-guard';
+import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { pendingVerificationGuard } from './guards/pending-verification-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -21,7 +22,7 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
 
   // Profile
@@ -29,7 +30,7 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () =>
       import('./pages/profile/profile.component').then((m) => m.ProfileComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
 
   // Verification
@@ -55,26 +56,26 @@ export const routes: Routes = [
     path: 'loans',
     loadComponent: () =>
       import('./pages/loans/list/loan-list.component').then((m) => m.LoanListComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
   {
     path: 'loans/apply',
     loadComponent: () =>
       import('./pages/loans/apply/loan-apply.component').then((m) => m.LoanApplyComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
   {
     path: 'loans/:loanId',
     loadComponent: () =>
       import('./pages/loans/details/loan-details.component').then((m) => m.LoanDetailsComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
 
   // Wallet
   {
     path: 'wallet',
     loadComponent: () => import('./pages/wallet/wallet.component').then((m) => m.WalletComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
 
   // Transactions
@@ -84,7 +85,7 @@ export const routes: Routes = [
       import('./pages/transactions/list/transaction-list.component').then(
         (m) => m.TransactionListComponent,
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
   {
     path: 'transactions/:transactionId',
@@ -92,7 +93,7 @@ export const routes: Routes = [
       import('./pages/transactions/details/transaction-details.component').then(
         (m) => m.TransactionDetailsComponent,
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, pendingVerificationGuard],
   },
 
   // Admin
@@ -125,5 +126,12 @@ export const routes: Routes = [
         (m) => m.PromoteUserComponent,
       ),
     canActivate: [adminGuard],
+  },
+
+  // 404 — must be last
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
 ];

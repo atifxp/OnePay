@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { VerificationService } from '../../../services/verification.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-verification-submit',
@@ -17,7 +18,18 @@ export class VerificationSubmitComponent {
   error = signal('');
   success = signal('');
 
-  constructor(private verificationService: VerificationService) {}
+  constructor(
+    private verificationService: VerificationService,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
+    });
+  }
 
   onSubmit(): void {
     this.error.set('');

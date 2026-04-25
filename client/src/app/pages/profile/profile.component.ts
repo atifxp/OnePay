@@ -12,7 +12,6 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="min-h-screen bg-gray-50 px-4 py-8">
       <div class="max-w-lg mx-auto">
-
         <div class="mb-6 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">Profile</h1>
@@ -30,7 +29,6 @@ import { AuthService } from '../../services/auth.service';
         @if (loading()) {
           <div class="text-center py-12 text-gray-400 text-sm">Loading...</div>
         } @else if (profile()) {
-
           <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-4">
             <div class="flex items-start justify-between mb-4">
               <div>
@@ -38,12 +36,15 @@ import { AuthService } from '../../services/auth.service';
                 <p class="text-xs text-gray-400 mt-0.5">User #{{ profile()!.userId }}</p>
               </div>
               <div class="flex gap-2">
-                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                <span
+                  class="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700"
+                >
                   {{ profile()!.role }}
                 </span>
-                <span class="text-xs font-medium px-2.5 py-1 rounded-full {{ statusClass(profile()!.accountStatus) }}">
+                <!-- TODO - FETCH ACCOUNT STATUS -->
+                <!-- <span class="text-xs font-medium px-2.5 py-1 rounded-full {{ statusClass(profile()!.accountStatus) }}">
                   {{ profile()!.accountStatus }}
-                </span>
+                </span> -->
               </div>
             </div>
 
@@ -63,13 +64,17 @@ import { AuthService } from '../../services/auth.service';
             <h2 class="text-sm font-semibold text-gray-900 mb-4">Edit Details</h2>
 
             @if (saveError()) {
-              <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+              <div
+                class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
+              >
                 {{ saveError() }}
               </div>
             }
 
             @if (saveSuccess()) {
-              <div class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4">
+              <div
+                class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4"
+              >
                 {{ saveSuccess() }}
               </div>
             }
@@ -109,12 +114,10 @@ import { AuthService } from '../../services/auth.service';
               </button>
             </form>
           </div>
-
         }
-
       </div>
     </div>
-  `
+  `,
 })
 export class ProfileComponent implements OnInit {
   profile = signal<UserProfile | null>(null);
@@ -144,7 +147,7 @@ export class ProfileComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.loadError.set(err.error?.message || 'Failed to load profile.');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -163,7 +166,7 @@ export class ProfileComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.saveError.set(err.error?.message || 'Failed to update profile.');
         this.saving.set(false);
-      }
+      },
     });
   }
 
