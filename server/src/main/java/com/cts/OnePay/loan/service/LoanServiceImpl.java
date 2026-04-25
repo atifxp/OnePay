@@ -10,8 +10,11 @@ import com.cts.OnePay.loan.model.LoanApproval;
 import com.cts.OnePay.loan.model.enums.LoanStatus;
 import com.cts.OnePay.loan.repository.LoanApplicationRepository;
 import com.cts.OnePay.loan.repository.LoanApprovalRepository;
+import com.cts.OnePay.transaction.model.Wallet;
+import com.cts.OnePay.transaction.repository.WalletRepository;
 import com.cts.OnePay.user.model.MyUserDetails;
 import com.cts.OnePay.user.model.User;
+import com.cts.OnePay.user.model.enums.Role;
 import com.cts.OnePay.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -35,6 +38,9 @@ public class LoanServiceImpl implements LoanService {
     private UserRepository userRepository;
 
     @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Transactional
@@ -53,9 +59,13 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanApplicationResponseDTO getLoanById(Long loanId) {
+    public LoanApplicationResponseDTO getLoanById(Long loanId, MyUserDetails userDetails) {
         LoanApplication loan = loanApplicationRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found with ID: " + loanId));
+        if (userDetails.getRole() == Role.CUSTOMER
+                && !loan.getUser().getUserId().equals(userDetails.getUserId())) {
+            throw new RuntimeException("Access denied: you can only view your own loans.");
+        }
         return mapToApplicationResponse(loan);
     }
 
@@ -76,9 +86,13 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanStatusResponseDTO getLoanStatus(Long loanId) {
+    public LoanStatusResponseDTO getLoanStatus(Long loanId, MyUserDetails userDetails) {
         LoanApplication loan = loanApplicationRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found with ID: " + loanId));
+        if (userDetails.getRole() == Role.CUSTOMER
+                && !loan.getUser().getUserId().equals(userDetails.getUserId())) {
+            throw new RuntimeException("Access denied: you can only view your own loans.");
+        }
         return modelMapper.map(loan, LoanStatusResponseDTO.class);
     }
 
@@ -97,6 +111,13 @@ public class LoanServiceImpl implements LoanService {
 
         loan.setLoanStatus(requestDTO.getLoanStatus());
         loanApplicationRepository.save(loan);
+
+        if (requestDTO.getLoanStatus() == LoanStatus.APPROVED) {
+            Wallet wallet = walletRepository.findByUser_UserId(loan.getUser().getUserId())
+                    .orElseThrow(() -> new RuntimeException("Wallet not found for user: " + loan.getUser().getUserId()));
+            wallet.setBalance(wallet.getBalance().add(loan.getLoanAmount()));
+            walletRepository.save(wallet);
+        }
 
         Optional<LoanApproval> existingApproval = loanApprovalRepository.findByLoanId_LoanId(requestDTO.getLoanId());
 

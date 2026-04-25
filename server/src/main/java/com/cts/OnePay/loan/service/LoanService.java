@@ -13,13 +13,13 @@ public interface LoanService {
 
     LoanApplicationResponseDTO applyLoan(LoanApplicationRequestDTO requestDTO, Long userId);
 
-    LoanApplicationResponseDTO getLoanById(Long loanId);
+    LoanApplicationResponseDTO getLoanById(Long loanId, MyUserDetails userDetails);
 
     List<LoanApplicationResponseDTO> getAllLoans();
 
     List<LoanApplicationResponseDTO> getLoansByUser(Long userId);
 
-    LoanStatusResponseDTO getLoanStatus(Long loanId);
+    LoanStatusResponseDTO getLoanStatus(Long loanId, MyUserDetails userDetails);
 
     LoanApprovalResponseDTO updateLoanStatus(LoanApprovalRequestDTO requestDTO, MyUserDetails userDetails);
 }

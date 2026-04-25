@@ -1,5 +1,6 @@
 package com.cts.OnePay.user.model;
 
+import com.cts.OnePay.user.model.enums.Role;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,5 +32,9 @@ public class MyUserDetails implements UserDetails {
 
     public Long getUserId(){
         return this.user.getUserId();
+    }
+
+    public Role getRole() {
+        return this.user.getRole();
     }
 }

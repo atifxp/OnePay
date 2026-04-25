@@ -34,12 +34,13 @@ public class LoanController {
 
     @GetMapping("/{loanId}")
     public ResponseEntity<LoanApplicationResponseDTO> getLoanById(
-            @PathVariable Long loanId) {
-        LoanApplicationResponseDTO response = loanService.getLoanById(loanId);
+            @PathVariable Long loanId,
+            @AuthenticationPrincipal MyUserDetails userDetails) {
+        LoanApplicationResponseDTO response = loanService.getLoanById(loanId, userDetails);
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('LOAN_OFFICER')")
+    @PreAuthorize("hasRole('LOAN_OFFICER') or hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<LoanApplicationResponseDTO>> getAllLoans() {
         List<LoanApplicationResponseDTO> response = loanService.getAllLoans();
@@ -55,11 +56,13 @@ public class LoanController {
 
     @GetMapping("/{loanId}/status")
     public ResponseEntity<LoanStatusResponseDTO> getLoanStatus(
-            @PathVariable Long loanId) {
-        LoanStatusResponseDTO response = loanService.getLoanStatus(loanId);
+            @PathVariable Long loanId,
+            @AuthenticationPrincipal MyUserDetails userDetails) {
+        LoanStatusResponseDTO response = loanService.getLoanStatus(loanId, userDetails);
         return ResponseEntity.ok(response);
     }
-    @PreAuthorize("hasRole('LOAN_OFFICER')")
+
+    @PreAuthorize("hasRole('LOAN_OFFICER') or hasRole('ADMIN')")
     @PostMapping("/approval")
     public ResponseEntity<LoanApprovalResponseDTO> updateLoanStatus(
             @Valid @RequestBody LoanApprovalRequestDTO requestDTO, @AuthenticationPrincipal MyUserDetails userDetails) {
