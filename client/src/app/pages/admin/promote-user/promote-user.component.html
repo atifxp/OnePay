@@ -1,0 +1,113 @@
+<div class="min-h-screen bg-gray-50 px-4 py-8">
+  <div class="max-w-lg mx-auto">
+    <div class="mb-6 flex items-center gap-3">
+      <a routerLink="/dashboard" class="text-sm text-gray-400 hover:text-gray-600"
+        >← Dashboard</a
+      >
+    </div>
+
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold text-gray-900">Promote User</h1>
+      <p class="text-sm text-gray-500 mt-1">Look up a user by ID, then assign a new role.</p>
+    </div>
+
+    <!-- Lookup -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-4">
+      <h2 class="text-sm font-semibold text-gray-700 mb-4">Find User</h2>
+      <div class="flex gap-2">
+        <input
+          type="number"
+          [(ngModel)]="searchId"
+          placeholder="Enter User ID"
+          min="1"
+          class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button
+          (click)="fetchUser()"
+          [disabled]="fetching() || !searchId"
+          class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+        >
+          {{ fetching() ? 'Searching...' : 'Search' }}
+        </button>
+      </div>
+
+      @if (fetchError()) {
+        <p class="text-red-500 text-sm mt-3">{{ fetchError() }}</p>
+      }
+    </div>
+
+    <!-- User Card -->
+    @if (foundUser()) {
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-4">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="font-semibold text-gray-900">{{ foundUser()!.fullName }}</p>
+            <p class="text-xs text-gray-400 mt-0.5">User #{{ foundUser()!.userId }}</p>
+          </div>
+          <div class="flex gap-2">
+            <span
+              class="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700"
+            >
+              {{ foundUser()!.role }}
+            </span>
+            <span
+              class="text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600"
+            >
+              {{ foundUser()!.accountStatus }}
+            </span>
+          </div>
+        </div>
+        <div class="space-y-2 text-sm border-t border-gray-100 pt-3">
+          <div class="flex justify-between py-1">
+            <span class="text-gray-500">Email</span>
+            <span class="text-gray-800 font-medium">{{ foundUser()!.email }}</span>
+          </div>
+          <div class="flex justify-between py-1 border-t border-gray-50">
+            <span class="text-gray-500">Phone</span>
+            <span class="text-gray-800 font-medium">{{ foundUser()!.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Promote Form -->
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+        <h2 class="text-sm font-semibold text-gray-700 mb-4">Assign New Role</h2>
+
+        @if (promoteError()) {
+          <div
+            class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
+            {{ promoteError() }}
+          </div>
+        }
+        @if (promoteSuccess()) {
+          <div
+            class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
+            {{ promoteSuccess() }}
+          </div>
+        }
+
+        <div class="flex gap-2">
+          <select
+            [(ngModel)]="selectedRole"
+            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+          >
+            <option value="LOAN_OFFICER">LOAN_OFFICER</option>
+            <option value="CUSTOMER">CUSTOMER</option>
+          </select>
+          <button
+            (click)="promote()"
+            [disabled]="promoting() || selectedRole === foundUser()!.role"
+            class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          >
+            {{ promoting() ? 'Promoting...' : 'Promote' }}
+          </button>
+        </div>
+        @if (selectedRole === foundUser()!.role) {
+          <p class="text-xs text-gray-400 mt-2">User already has this role.</p>
+        }
+      </div>
+    }
+  </div>
+</div>
