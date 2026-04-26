@@ -2,6 +2,8 @@ package com.cts.OnePay.filter;
 
 import com.cts.OnePay.user.model.MyUserDetails;
 import com.cts.OnePay.user.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,9 +32,19 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = jwtService.extractCookie("access-token",request);
         String phone = null;
 
-        if(token != null ){
-            phone = jwtService.extractPhoneNo(token);
+        try {
+            if(token != null ){
+                phone = jwtService.extractPhoneNo(token);
+            }
+        } catch (JwtException ex) {
+            //Returns 401 status for the frontend to call refresh endpoint
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Invalid access token\"}");
+            return; // stop filter chain
         }
+
+
 
         if(phone != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails myUserDetails =  userDetailsService.loadUserByUsername(phone);

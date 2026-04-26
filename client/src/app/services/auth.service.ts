@@ -11,11 +11,23 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(phone: string, password: string) {
-    return this.http.post<{ user: any; message: string }>(`${this.api}/login`, { phone, password }, OPTIONS);
+    return this.http.post<{ user: any; message: string }>(
+      `${this.api}/login`,
+      { phone, password },
+      OPTIONS,
+    );
   }
 
   register(fullName: string, email: string, phone: string, passwordHash: string) {
-    return this.http.post<{ message: string }>(`${this.api}/register`, { fullName, email, phone, passwordHash }, OPTIONS);
+    return this.http.post<{ message: string }>(
+      `${this.api}/register`,
+      { fullName, email, phone, passwordHash },
+      OPTIONS,
+    );
+  }
+
+  refresh() {
+    return this.http.post<{ user: any; message: string }>(`${this.api}/refresh`, {}, OPTIONS);
   }
 
   logout() {
