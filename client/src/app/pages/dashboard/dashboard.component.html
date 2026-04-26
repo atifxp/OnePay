@@ -21,83 +21,83 @@
     </div>
   </header>
 
-  <!-- ── ADMIN / LOAN_OFFICER VIEW ── -->
-  @if (user() && user()!.role !== 'CUSTOMER') {
+  <!-- ── ADMIN VIEW ── -->
+  @if (user() && user()!.role === 'ADMIN') {
     <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-widest text-purple-600 mb-1">
-          Admin Panel
-        </p>
+        <p class="text-xs font-semibold uppercase tracking-widest text-purple-600 mb-1">Admin Panel</p>
         <h2 class="text-2xl font-bold text-gray-900">Welcome, {{ user()!.fullName }}</h2>
         <p class="text-sm text-gray-500 mt-1">Manage platform operations from here.</p>
       </div>
 
-      <!-- Admin action cards -->
       <div class="grid grid-cols-1 gap-4">
         <!-- Verify Identities -->
-        <a
-          routerLink="/admin/verification"
-          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group"
-        >
-          <div
-            class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center text-yellow-600 text-2xl shrink-0"
-          >
-            🪪
-          </div>
+        <a routerLink="/admin/verification"
+          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group">
+          <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center text-yellow-600 text-2xl shrink-0">🪪</div>
           <div class="flex-1 min-w-0">
-            <p class="font-semibold text-gray-900 group-hover:text-yellow-700 transition">
-              Verify Identities
-            </p>
-            <p class="text-sm text-gray-500 mt-0.5">
-              Review pending KYC documents and approve or reject user verification requests.
-            </p>
+            <p class="font-semibold text-gray-900 group-hover:text-yellow-700 transition">Verify Identities</p>
+            <p class="text-sm text-gray-500 mt-0.5">Review pending KYC documents and approve or reject user verification requests.</p>
           </div>
           <span class="text-gray-400 text-lg shrink-0">→</span>
         </a>
 
         <!-- All Transactions -->
-        <a
-          routerLink="/admin/transactions"
-          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group"
-        >
-          <div
-            class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-2xl shrink-0"
-          >
-            💳
-          </div>
+        <a routerLink="/admin/transactions"
+          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-2xl shrink-0">💳</div>
           <div class="flex-1 min-w-0">
-            <p class="font-semibold text-gray-900 group-hover:text-blue-700 transition">
-              All Transactions
-            </p>
-            <p class="text-sm text-gray-500 mt-0.5">
-              View platform-wide transaction history with sender, receiver, amount, and status.
-            </p>
+            <p class="font-semibold text-gray-900 group-hover:text-blue-700 transition">All Transactions</p>
+            <p class="text-sm text-gray-500 mt-0.5">View platform-wide transaction history with sender, receiver, amount, and status.</p>
+          </div>
+          <span class="text-gray-400 text-lg shrink-0">→</span>
+        </a>
+
+        <!-- Manage Loans -->
+        <a routerLink="/admin/loans"
+          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group">
+          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 text-2xl shrink-0">🏦</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-900 group-hover:text-green-700 transition">Manage Loans</p>
+            <p class="text-sm text-gray-500 mt-0.5">Review loan applications and approve or reject requests.</p>
           </div>
           <span class="text-gray-400 text-lg shrink-0">→</span>
         </a>
 
         <!-- Promote User -->
-        @if (user()!.role === 'ADMIN') {
-          <a
-            routerLink="/admin/promote"
-            class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group"
-          >
-            <div
-              class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 text-2xl shrink-0"
-            >
-              👤
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-semibold text-gray-900 group-hover:text-purple-700 transition">
-                Promote User
-              </p>
-              <p class="text-sm text-gray-500 mt-0.5">
-                Look up a user by ID, then assign a new role.
-              </p>
-            </div>
-            <span class="text-gray-400 text-lg shrink-0">→</span>
-          </a>
-        }
+        <a routerLink="/admin/promote"
+          class="flex items-center gap-5 bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-5 hover:shadow-md transition group">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 text-2xl shrink-0">👤</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-900 group-hover:text-purple-700 transition">Promote User</p>
+            <p class="text-sm text-gray-500 mt-0.5">Look up a user by ID and assign them a new role.</p>
+          </div>
+          <span class="text-gray-400 text-lg shrink-0">→</span>
+        </a>
+      </div>
+    </main>
+  }
+
+  <!-- ── LOAN OFFICER VIEW ── -->
+  @if (user() && user()!.role === 'LOAN_OFFICER') {
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-green-600 mb-1">Loan Officer Panel</p>
+        <h2 class="text-2xl font-bold text-gray-900">Welcome, {{ user()!.fullName }}</h2>
+        <p class="text-sm text-gray-500 mt-1">Review and action loan applications submitted by customers.</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <!-- Manage Loans -->
+        <a routerLink="/admin/loans"
+          class="flex items-center gap-5 bg-white rounded-2xl border border-green-200 shadow-sm px-6 py-5 hover:shadow-md transition group">
+          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 text-2xl shrink-0">🏦</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-900 group-hover:text-green-700 transition">Loan Applications</p>
+            <p class="text-sm text-gray-500 mt-0.5">View all submitted loans. Approve, reject, or mark them under review.</p>
+          </div>
+          <span class="text-gray-400 text-lg shrink-0">→</span>
+        </a>
       </div>
     </main>
   }
