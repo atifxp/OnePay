@@ -2,19 +2,28 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 import { pendingVerificationGuard } from './guards/pending-verification-guard';
+import { publicRoutesGuard } from './guards/public-routes-guard';
+import { approvedVerificationGuard } from './guards/approved-verification-guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  // Homepage
+  {
+    path: '',
+    loadComponent: () => import('./pages/home/home.component').then((m) => m.HomeComponent),
+    canActivate: [publicRoutesGuard],
+  },
 
   // Auth
   {
     path: 'login',
     loadComponent: () => import('./pages/auth/login/login.component').then((m) => m.LoginComponent),
+    canActivate: [publicRoutesGuard],
   },
   {
     path: 'register',
     loadComponent: () =>
       import('./pages/auth/register/register.component').then((m) => m.RegisterComponent),
+    canActivate: [publicRoutesGuard],
   },
 
   // Dashboard
@@ -40,7 +49,7 @@ export const routes: Routes = [
       import('./pages/verification/submit/verification-submit.component').then(
         (m) => m.VerificationSubmitComponent,
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, approvedVerificationGuard],
   },
   {
     path: 'verification/status',
@@ -128,7 +137,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
 
-  // 404 — must be last
+  // 404 page
   {
     path: '**',
     loadComponent: () =>
