@@ -35,9 +35,8 @@ export class LoanListComponent implements OnInit {
 
   statusClass(status: string): string {
     const map: Record<string, string> = {
-      APPROVED: 'bg-green-50 text-green-700',
-      REJECTED: 'bg-red-50 text-red-700',
-      UNDER_REVIEW: 'bg-yellow-50 text-yellow-700',
+      APPROVED:  'bg-green-50 text-green-700',
+      REJECTED:  'bg-red-50 text-red-700',
       SUBMITTED: 'bg-blue-50 text-blue-700',
     };
     return map[status] ?? 'bg-gray-100 text-gray-600';
