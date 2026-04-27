@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 export type LoanType = 'PERSONAL' | 'HOME' | 'VEHICLE' | 'EDUCATION' | 'OTHER';
-export type LoanStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED' | 'UNDER_REVIEW';
+export type LoanStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
 
 export interface LoanApplicationRequest {
   loanType: LoanType;
