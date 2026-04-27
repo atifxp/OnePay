@@ -49,7 +49,7 @@ export const routes: Routes = [
       import('./pages/verification/submit/verification-submit.component').then(
         (m) => m.VerificationSubmitComponent,
       ),
-    canActivate: [authGuard, approvedVerificationGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'verification/status',
