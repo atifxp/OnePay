@@ -30,12 +30,12 @@ public class LedgerServiceImpl implements LedgerService {
         credit.setBalanceAfter(receiverAfter);
 
         Ledger debit= new Ledger();
-        credit.setAmount(amount);
-        credit.setWallet(senderWallet);
-        credit.setTransaction(transaction);
-        credit.setEntryType(EntryType.DEBIT);
-        credit.setBalanceBefore(senderBefore);
-        credit.setBalanceAfter(senderAfter);
+        debit.setAmount(amount);
+        debit.setWallet(senderWallet);
+        debit.setTransaction(transaction);
+        debit.setEntryType(EntryType.DEBIT);
+        debit.setBalanceBefore(senderBefore);
+        debit.setBalanceAfter(senderAfter);
 
         ledgerRepository.save(credit);
         ledgerRepository.save(debit);
