@@ -23,7 +23,10 @@ export class AdminLoansComponent implements OnInit {
     this.loanService.getAll().subscribe({
       next: (loans) => {
         this.loans.set(loans);
-        loans.forEach(l => this.selectedStatus[l.loanId] = l.loanStatus);
+        loans.forEach(l => {
+          // For pending loans default the dropdown to APPROVED; finalized loans keep their status
+          this.selectedStatus[l.loanId] = l.loanStatus === 'SUBMITTED' ? 'APPROVED' : l.loanStatus;
+        });
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -60,9 +63,8 @@ export class AdminLoansComponent implements OnInit {
 
   statusClass(status: string): string {
     const map: Record<string, string> = {
-      APPROVED: 'bg-green-50 text-green-700',
-      REJECTED: 'bg-red-50 text-red-700',
-      UNDER_REVIEW: 'bg-yellow-50 text-yellow-700',
+      APPROVED:  'bg-green-50 text-green-700',
+      REJECTED:  'bg-red-50 text-red-700',
       SUBMITTED: 'bg-blue-50 text-blue-700',
     };
     return map[status] ?? 'bg-gray-100 text-gray-600';
