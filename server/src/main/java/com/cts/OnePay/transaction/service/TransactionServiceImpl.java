@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -80,9 +81,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<TransactionResponseDto> getMyTransactions(Long userId, int page, int size){
         Wallet wallet= walletRepository.findByUser_UserId(userId)
                 .orElseThrow(()-> new RuntimeException("Cannot find user wallet"));
-        Pageable pageable= PageRequest.of(page,size);
-        Page<Transaction> transactions=transactionRepository.findBySenderWallet_WalletId(wallet.getWalletId(),pageable);
-        return transactions.map(txn->toDto(txn));
+        Long walletId= wallet.getWalletId();
+        Pageable pageable= PageRequest.of(page,size, Sort.Direction.DESC, "completedAt");
+        Page<Transaction> transactions=transactionRepository
+                .findBySenderWallet_WalletIdOrReceiverWallet_WalletId(walletId, walletId, pageable);
+        return transactions.map(this::toDto);
     }
 
     public TransactionResponseDto getMyTransactionById(Long transactionId, Long userId){

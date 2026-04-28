@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionService, Transaction } from '../../../services/transaction.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -28,10 +29,19 @@ export class TransactionListComponent implements OnInit {
   transferError = signal('');
   transferSuccess = signal('');
 
-  constructor(private transactionService: TransactionService) {}
+  currentUserId = signal<number | null>(null);
+
+  constructor(private transactionService: TransactionService, private userService: UserService) {}
 
   ngOnInit(): void {
+    this.userService.getProfile().subscribe(profile => {
+      this.currentUserId.set(profile.userId);
+    });
     this.loadTransactions();
+  }
+
+  isCredit(txn: Transaction): boolean {
+    return txn.senderWallet.userId !== this.currentUserId();
   }
 
   loadTransactions(): void {
@@ -91,6 +101,12 @@ export class TransactionListComponent implements OnInit {
       case 'FAILED':    return 'bg-red-50 text-red-700 border-red-200';
       default:          return 'bg-yellow-50 text-yellow-700 border-yellow-200';
     }
+  }
+
+  typeClass(type: string | null): string {
+    return type === 'CREDIT'
+      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      : 'bg-red-50 text-red-700 border-red-200';
   }
 
   formatDate(dateStr: string): string {
