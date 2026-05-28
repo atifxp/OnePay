@@ -2,12 +2,13 @@ import { Component, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { WalletService, WalletResponse } from '../../services/wallet.service';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-wallet',
   standalone: true,
-  imports: [RouterLink],
-  templateUrl: './wallet.component.html'
+  imports: [RouterLink, Navbar],
+  templateUrl: './wallet.component.html',
 })
 export class WalletComponent implements OnInit {
   wallet = signal<WalletResponse | null>(null);
@@ -30,14 +31,14 @@ export class WalletComponent implements OnInit {
           this.error.set(err.error?.message || 'Failed to load wallet.');
         }
         this.loading.set(false);
-      }
+      },
     });
   }
 
   formatBalance(balance: number): string {
     return new Intl.NumberFormat('en-IN', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(balance);
   }
 }

@@ -1,8 +1,6 @@
 package com.cts.OnePay.transaction.dto;
 
-import com.cts.OnePay.transaction.model.Wallet;
 import com.cts.OnePay.transaction.model.enums.TransactionStatus;
-import com.cts.OnePay.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

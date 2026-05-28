@@ -1,11 +1,11 @@
+<app-navbar />
 <div class="min-h-screen bg-gray-50 px-6 py-10">
   <div class="max-w-3xl mx-auto space-y-4">
-
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-semibold text-gray-900">Transactions</h1>
-        <p class="text-sm text-gray-500 mt-1">Your sent payments</p>
+        <p class="text-sm text-gray-500 mt-1">Your transaction history</p>
       </div>
       <button
         (click)="showTransferForm.set(!showTransferForm())"
@@ -21,12 +21,16 @@
         <h2 class="text-base font-semibold text-gray-800 mb-4">Send Money</h2>
 
         @if (transferError()) {
-          <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+          <div
+            class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
             {{ transferError() }}
           </div>
         }
         @if (transferSuccess()) {
-          <div class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4">
+          <div
+            class="bg-green-50 border border-green-200 text-green-600 text-sm rounded-lg px-4 py-3 mb-4"
+          >
             {{ transferSuccess() }}
           </div>
         }
@@ -100,14 +104,32 @@
           >
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-800 truncate">
-                To: {{ txn.receiverWallet.userFullName }}
+                @if (isCredit(txn)) {
+                  From: {{ txn.senderWallet.userFullName }}
+                } @else {
+                  To: {{ txn.receiverWallet.userFullName }}
+                }
               </p>
               <p class="text-xs text-gray-400 mt-0.5">{{ txn.message }}</p>
               <p class="text-xs text-gray-400">{{ formatDate(txn.initiatedAt) }}</p>
             </div>
             <div class="flex flex-col items-end gap-1 ml-4">
-              <span class="text-sm font-semibold text-gray-900">- ₹{{ txn.amount }}</span>
-              <span class="text-xs border px-2 py-0.5 rounded-full {{ statusClass(txn.transactionStatus) }}">
+              <span
+                class="text-sm font-semibold"
+                [class]="isCredit(txn) ? 'text-emerald-600' : 'text-red-600'"
+              >
+                {{ isCredit(txn) ? '+' : '-' }} ₹{{ txn.amount }}
+              </span>
+              <span
+                class="text-xs border px-2 py-0.5 rounded-full"
+                [class]="typeClass(isCredit(txn) ? 'CREDIT' : 'DEBIT')"
+              >
+                {{ isCredit(txn) ? 'CREDIT' : 'DEBIT' }}
+              </span>
+              <span
+                class="text-xs border px-2 py-0.5 rounded-full"
+                [class]="statusClass(txn.transactionStatus)"
+              >
                 {{ txn.transactionStatus }}
               </span>
             </div>
@@ -134,6 +156,5 @@
         </button>
       </div>
     }
-
   </div>
 </div>

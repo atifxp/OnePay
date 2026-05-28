@@ -1,0 +1,21 @@
+<!-- Header -->
+<header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+  <a routerLink="/dashboard" class="text-xl font-semibold text-gray-800">OnePay</a>
+  <div class="flex items-center gap-4">
+    @if (user()) {
+      <span class="text-sm text-gray-600">{{ user()?.fullName }}</span>
+      <span
+        class="text-xs px-2 py-1 rounded-full font-medium"
+        [class]="
+          user()!.role === 'CUSTOMER'
+            ? 'bg-blue-100 text-blue-700'
+            : 'bg-purple-100 text-purple-700'
+        "
+      >
+        {{ user()!.role }}
+      </span>
+    }
+    <a routerLink="/profile" class="text-sm text-blue-600 hover:underline">Profile</a>
+    <button (click)="logout()" class="text-sm text-red-500 hover:underline">Logout</button>
+  </div>
+</header>

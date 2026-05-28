@@ -1,11 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { VerificationService, VerificationPending } from '../../../services/verification.service';
+import { Navbar } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-admin-verification',
   standalone: true,
-  imports: [],
+  imports: [Navbar],
   templateUrl: './admin-verification.component.html',
 })
 export class AdminVerificationComponent implements OnInit {

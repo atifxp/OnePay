@@ -5,11 +5,12 @@ import { UserService, UserProfile } from '../../services/user.service';
 import { WalletService, WalletResponse } from '../../services/wallet.service';
 import { TransactionService, Transaction } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Navbar],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {

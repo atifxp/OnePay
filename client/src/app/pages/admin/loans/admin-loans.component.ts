@@ -2,12 +2,13 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoanService, LoanApplication, LoanStatus } from '../../../services/loan.service';
+import { Navbar } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-admin-loans',
   standalone: true,
-  imports: [FormsModule],
-  templateUrl: './admin-loans.component.html'
+  imports: [FormsModule, Navbar],
+  templateUrl: './admin-loans.component.html',
 })
 export class AdminLoansComponent implements OnInit {
   loans = signal<LoanApplication[]>([]);
@@ -23,8 +24,7 @@ export class AdminLoansComponent implements OnInit {
     this.loanService.getAll().subscribe({
       next: (loans) => {
         this.loans.set(loans);
-        loans.forEach(l => {
-          // For pending loans default the dropdown to APPROVED; finalized loans keep their status
+        loans.forEach((l) => {
           this.selectedStatus[l.loanId] = l.loanStatus === 'SUBMITTED' ? 'APPROVED' : l.loanStatus;
         });
         this.loading.set(false);
@@ -32,7 +32,7 @@ export class AdminLoansComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to load loans.');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -43,8 +43,8 @@ export class AdminLoansComponent implements OnInit {
 
     this.loanService.updateStatus({ loanId, loanStatus: this.selectedStatus[loanId] }).subscribe({
       next: (res) => {
-        this.loans.update(list =>
-          list.map(l => l.loanId === loanId ? { ...l, loanStatus: res.loanStatus } : l)
+        this.loans.update((list) =>
+          list.map((l) => (l.loanId === loanId ? { ...l, loanStatus: res.loanStatus } : l)),
         );
         this.successMsg.set(`Loan #${loanId} updated to ${res.loanStatus}.`);
         this.updating.set(null);
@@ -53,7 +53,7 @@ export class AdminLoansComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to update status.');
         this.updating.set(null);
-      }
+      },
     });
   }
 
@@ -63,8 +63,8 @@ export class AdminLoansComponent implements OnInit {
 
   statusClass(status: string): string {
     const map: Record<string, string> = {
-      APPROVED:  'bg-green-50 text-green-700',
-      REJECTED:  'bg-red-50 text-red-700',
+      APPROVED: 'bg-green-50 text-green-700',
+      REJECTED: 'bg-red-50 text-red-700',
       SUBMITTED: 'bg-blue-50 text-blue-700',
     };
     return map[status] ?? 'bg-gray-100 text-gray-600';

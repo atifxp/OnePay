@@ -1,12 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionService, Transaction } from '../../../services/transaction.service';
+import { Navbar } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-admin-transactions',
   standalone: true,
-  imports: [],
-  templateUrl: './admin-transactions.component.html'
+  imports: [Navbar],
+  templateUrl: './admin-transactions.component.html',
 })
 export class AdminTransactionsComponent implements OnInit {
   transactions = signal<Transaction[]>([]);
@@ -29,24 +30,24 @@ export class AdminTransactionsComponent implements OnInit {
     this.transactionService.getAll(this.page(), this.pageSize).subscribe({
       next: (res) => {
         this.transactions.set(res.content);
-        this.totalPages.set(res.totalPages);
-        this.totalElements.set(res.totalElements);
+        this.totalPages.set(res.page.totalPages);
+        this.totalElements.set(res.page.totalElements);
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to load transactions.');
         this.loading.set(false);
-      }
+      },
     });
   }
 
   prevPage(): void {
-    this.page.update(p => p - 1);
+    this.page.update((p) => p - 1);
     this.loadPage();
   }
 
   nextPage(): void {
-    this.page.update(p => p + 1);
+    this.page.update((p) => p + 1);
     this.loadPage();
   }
 
@@ -56,8 +57,11 @@ export class AdminTransactionsComponent implements OnInit {
 
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('en-IN', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 

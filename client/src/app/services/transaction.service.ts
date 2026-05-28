@@ -21,10 +21,12 @@ export interface Transaction {
 
 export interface SpringPage<T> {
   content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
+  page: {
+    totalElements: number;
+    totalPages: number;
+    number: number;
+    size: number;
+  };
 }
 
 const OPTIONS = { withCredentials: true };
@@ -36,11 +38,18 @@ export class TransactionService {
   constructor(private http: HttpClient) {}
 
   transfer(receiverUserId: number, amount: number, message: string) {
-    return this.http.post<Transaction>(`${this.api}/transfer`, { receiverUserId, amount, message }, OPTIONS);
+    return this.http.post<Transaction>(
+      `${this.api}/transfer`,
+      { receiverUserId, amount, message },
+      OPTIONS,
+    );
   }
 
   getMyTransactions(page = 0, size = 10) {
-    return this.http.get<SpringPage<Transaction>>(`${this.api}/`, { ...OPTIONS, params: { page, size } });
+    return this.http.get<SpringPage<Transaction>>(`${this.api}/`, {
+      ...OPTIONS,
+      params: { page, size },
+    });
   }
 
   getTransactionById(transactionId: number) {
@@ -48,7 +57,10 @@ export class TransactionService {
   }
 
   getAllTransactions(page = 0, size = 10) {
-    return this.http.get<SpringPage<Transaction>>(`${this.api}/all`, { ...OPTIONS, params: { page, size } });
+    return this.http.get<SpringPage<Transaction>>(`${this.api}/all`, {
+      ...OPTIONS,
+      params: { page, size },
+    });
   }
 
   getAll(page = 0, size = 10) {

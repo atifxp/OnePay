@@ -1,3 +1,4 @@
+<app-navbar />
 <div class="min-h-screen bg-gray-50 px-4 py-8">
   <div class="max-w-4xl mx-auto">
     <div class="mb-6">
@@ -8,9 +9,7 @@
     </div>
 
     @if (error()) {
-      <div
-        class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
-      >
+      <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
         {{ error() }}
       </div>
     }
@@ -39,9 +38,7 @@
                 <p class="text-xs text-gray-500 mt-0.5">
                   {{ item.user.email }} · {{ item.user.phone }}
                 </p>
-                <p class="text-xs text-gray-400 mt-1">
-                  {{ item.docType }} · {{ item.docNumber }}
-                </p>
+                <p class="text-xs text-gray-400 mt-1">{{ item.docType }} · {{ item.docNumber }}</p>
               </div>
 
               <div class="flex items-center gap-2 shrink-0">
