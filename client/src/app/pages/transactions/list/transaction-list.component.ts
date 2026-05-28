@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TransactionService, Transaction } from '../../../services/transaction.service';
 import { UserService } from '../../../services/user.service';
+import { Navbar } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
-  imports: [RouterLink, FormsModule],
-  templateUrl: './transaction-list.component.html'
+  imports: [RouterLink, FormsModule, Navbar],
+  templateUrl: './transaction-list.component.html',
 })
 export class TransactionListComponent implements OnInit {
   transactions = signal<Transaction[]>([]);
@@ -31,10 +32,13 @@ export class TransactionListComponent implements OnInit {
 
   currentUserId = signal<number | null>(null);
 
-  constructor(private transactionService: TransactionService, private userService: UserService) {}
+  constructor(
+    private transactionService: TransactionService,
+    private userService: UserService,
+  ) {}
 
   ngOnInit(): void {
-    this.userService.getProfile().subscribe(profile => {
+    this.userService.getProfile().subscribe((profile) => {
       this.currentUserId.set(profile.userId);
     });
     this.loadTransactions();
@@ -50,13 +54,13 @@ export class TransactionListComponent implements OnInit {
     this.transactionService.getMyTransactions(this.page, this.pageSize).subscribe({
       next: (res) => {
         this.transactions.set(res.content);
-        this.totalPages.set(res.totalPages);
+        this.totalPages.set(res.page.totalPages);
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(err.error?.message || 'Failed to load transactions.');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -79,27 +83,34 @@ export class TransactionListComponent implements OnInit {
     this.transferSuccess.set('');
     this.transferring.set(true);
 
-    this.transactionService.transfer(this.receiverUserId, this.amount, this.transferMessage).subscribe({
-      next: (res) => {
-        this.transferSuccess.set(`₹${res.amount} sent successfully to ${res.receiverWallet.userFullName}.`);
-        this.transferring.set(false);
-        this.receiverUserId = 0;
-        this.amount = 0;
-        this.transferMessage = '';
-        this.loadTransactions();
-      },
-      error: (err: HttpErrorResponse) => {
-        this.transferError.set(err.error?.message || 'Transfer failed. Please try again.');
-        this.transferring.set(false);
-      }
-    });
+    this.transactionService
+      .transfer(this.receiverUserId, this.amount, this.transferMessage)
+      .subscribe({
+        next: (res) => {
+          this.transferSuccess.set(
+            `₹${res.amount} sent successfully to ${res.receiverWallet.userFullName}.`,
+          );
+          this.transferring.set(false);
+          this.receiverUserId = 0;
+          this.amount = 0;
+          this.transferMessage = '';
+          this.loadTransactions();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.transferError.set(err.error?.message || 'Transfer failed. Please try again.');
+          this.transferring.set(false);
+        },
+      });
   }
 
   statusClass(status: string): string {
     switch (status) {
-      case 'COMPLETED': return 'bg-green-50 text-green-700 border-green-200';
-      case 'FAILED':    return 'bg-red-50 text-red-700 border-red-200';
-      default:          return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+      case 'COMPLETED':
+        return 'bg-green-50 text-green-700 border-green-200';
+      case 'FAILED':
+        return 'bg-red-50 text-red-700 border-red-200';
+      default:
+        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
     }
   }
 
@@ -111,8 +122,11 @@ export class TransactionListComponent implements OnInit {
 
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('en-IN', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 }
