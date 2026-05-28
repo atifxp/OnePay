@@ -1,0 +1,38 @@
+package com.cts.onepay.utils;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+
+public class DriverManager {
+    private static WebDriver driver;
+
+    public static WebDriver getDriver(String browser, boolean headless){
+        if(driver == null){
+
+            switch (browser.toLowerCase()){
+                case "chrome":
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    if(headless)
+                        chromeOptions.addArguments("--headless");
+                    driver = new ChromeDriver(chromeOptions);
+                    break;
+                case "edge":
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    if(headless)
+                        edgeOptions.addArguments("--headless");
+                    driver = new EdgeDriver(edgeOptions);
+                    break;
+                default: throw new IllegalArgumentException("Provided Browser not found");
+            }
+        }
+        initDriver();
+        return driver;
+    }
+
+    private static void initDriver() {
+        driver.manage().window().maximize();
+    }
+}
