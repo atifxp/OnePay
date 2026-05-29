@@ -28,11 +28,15 @@ public class DriverManager {
                 default: throw new IllegalArgumentException("Provided Browser not found");
             }
         }
-        initDriver();
         return driver;
     }
 
-    private static void initDriver() {
-        driver.manage().window().maximize();
+    public static void quitDriver(){
+        if(driver != null){
+            driver.quit();
+            driver = null; // to avoid driver to point towards the dead driver
+        }
     }
+
+
 }

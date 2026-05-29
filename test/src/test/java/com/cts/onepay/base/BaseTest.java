@@ -2,24 +2,37 @@ package com.cts.onepay.base;
 
 import com.cts.onepay.utils.ConfigReader;
 import com.cts.onepay.utils.DriverManager;
+import com.cts.onepay.utils.ExcelUtils;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+
 
 public class BaseTest {
 
     protected static WebDriver driver;
 
-    @BeforeClass
+    @BeforeSuite
+    public void beforeSuite(){}
+
+
+    @BeforeMethod
     public void setUp(){
         driver = DriverManager.getDriver(ConfigReader.get("browser"),ConfigReader.getBoolean("headless"));
         driver.manage().window().maximize();
-        //driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
     }
 
-    @AfterClass
-    public void tearDown() throws InterruptedException {
-        if(driver != null)
-            driver.quit();
+    @AfterMethod
+    public void tearDown() {
+        DriverManager.quitDriver();
+    }
+
+    @AfterSuite
+    public void afterSuite(){
+        //close excel
+        ExcelUtils.close();
+        System.out.println("Excel closed");
     }
 }

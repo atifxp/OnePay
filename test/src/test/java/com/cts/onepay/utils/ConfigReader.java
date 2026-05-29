@@ -19,8 +19,8 @@ public class ConfigReader {
         return properties.getProperty(key);
     }
 
-    public static int getInt(String key) {
-        return Integer.parseInt(get(key));
+    public static long getLong(String key) {
+        return Long.parseLong(get(key));
     }
 
     public static boolean getBoolean(String key) {
