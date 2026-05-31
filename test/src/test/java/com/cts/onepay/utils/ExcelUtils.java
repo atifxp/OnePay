@@ -40,7 +40,7 @@ public final class ExcelUtils {
 
             ws = wb.getSheet(sheetName);
 
-            int totalRows = ws.getLastRowNum();
+            int totalRows = ws.getLastRowNum() + 1;
             int totalCells = ws.getRow(1).getLastCellNum();
 
             data = new Object[totalRows-1][totalCells];
