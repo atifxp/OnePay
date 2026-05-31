@@ -35,32 +35,26 @@ public final class ExcelUtils {
         }
     }
 
-    public static Object[][] getSheetData(String sheetName){
-        Object[][] data;
+    public static Object[][] getSheetData(String sheetName) {
+        ws = wb.getSheet(sheetName);
+        int lastRow = ws.getLastRowNum();
+        int totalCells = ws.getRow(1).getLastCellNum();
 
-            ws = wb.getSheet(sheetName);
+        java.util.List<Object[]> rows = new java.util.ArrayList<>();
+        for (int r = 1; r <= lastRow; r++) {
+            XSSFRow row = ws.getRow(r);
+            if (row == null) continue;
 
-            int totalRows = ws.getLastRowNum() + 1;
-            int totalCells = ws.getRow(1).getLastCellNum();
-
-            data = new Object[totalRows-1][totalCells];
-
-            //loop through the cells
-            for (int r = 1; r < totalRows ; r++) {
-
-                row = ws.getRow(r);
-
-                for (int c = 0; c < totalCells; c++) {      //as column no. starts from 1 in excel
-                    cell = row.getCell(c);
-                    data[r-1][c] = formatter.formatCellValue(cell);
-                }
+            Object[] rowData = new Object[totalCells];
+            boolean blank = true;
+            for (int c = 0; c < totalCells; c++) {
+                String val = formatter.formatCellValue(row.getCell(c));
+                rowData[c] = val;
+                if (!val.trim().isEmpty()) blank = false;
             }
-
-
-            return data;
-
-
-
+            if (!blank) rows.add(rowData);   // skip fully-empty rows
+        }
+        return rows.toArray(new Object[0][]);
     }
 
     public static void close() {

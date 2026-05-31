@@ -7,4 +7,10 @@
             <class name="com.cts.onepay.tests.LoginTest"/>
         </classes>
     </test>
+    <test name="transaction">
+        <classes>
+            <class name="com.cts.onepay.tests.TransactionTest"/>
+        </classes>
+    </test>
+
 </suite>

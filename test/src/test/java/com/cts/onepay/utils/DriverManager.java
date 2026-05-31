@@ -6,6 +6,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DriverManager {
     private static WebDriver driver;
 
@@ -14,7 +17,12 @@ public class DriverManager {
 
             switch (browser.toLowerCase()){
                 case "chrome":
+                    final Map<String, Object> chromePrefs = new HashMap<>();
+                    chromePrefs.put("credentials_enable_service", false);
+                    chromePrefs.put("profile.password_manager_enabled", false);
+                    chromePrefs.put("profile.password_manager_leak_detection", false);
                     ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.setExperimentalOption("prefs", chromePrefs);
                     if(headless)
                         chromeOptions.addArguments("--headless");
                     driver = new ChromeDriver(chromeOptions);
