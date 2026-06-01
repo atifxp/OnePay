@@ -38,8 +38,7 @@ public class TransactionPage extends BasePage {
 
 
     public TransactionPage openTransferForm() {
-        click(sendMoneyToggle);
-        waitForVisibility(receiverInput);
+        waitForClickability(sendMoneyToggle).click();
         return this;
     }
 

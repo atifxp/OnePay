@@ -4,10 +4,7 @@ import com.cts.onepay.utils.ConfigReader;
 import com.cts.onepay.utils.DriverManager;
 import com.cts.onepay.utils.ExcelUtils;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
 
 public class BaseTest {
@@ -18,13 +15,13 @@ public class BaseTest {
     public void beforeSuite(){}
 
 
-    @BeforeMethod
+    @BeforeClass
     public void setUp(){
         driver = DriverManager.getDriver(ConfigReader.get("browser"),ConfigReader.getBoolean("headless"));
         driver.manage().window().maximize();
     }
 
-    @AfterMethod
+    @AfterClass
     public void tearDown() {
         DriverManager.quitDriver();
     }

@@ -6,9 +6,20 @@ import com.cts.onepay.pages.LoginPage;
 import com.cts.onepay.pages.TransactionPage;
 import com.cts.onepay.utils.ConfigReader;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TransactionTest extends BaseTest {
+
+    @BeforeClass
+    public void loginAsCustomer() throws InterruptedException {
+        LoginPage login = new LoginPage(driver);
+        login.navigate(ConfigReader.get("route.login"));
+        login.validLoginAs(
+                ConfigReader.get("customer.phone"),
+                ConfigReader.get("customer.password")
+        );
+    }
 
     @Test(
             dataProvider = "transferData",
@@ -22,13 +33,6 @@ public class TransactionTest extends BaseTest {
             String message,
             String expectedResult
     ) throws InterruptedException {
-        // Login as verified customer
-        LoginPage login = new LoginPage(driver);
-        login.navigate(ConfigReader.get("route.login"));
-        login.validLoginAs(
-                ConfigReader.get("customer.phone"),
-                ConfigReader.get("customer.password")
-        );
 
         // Go to Transaction page and initiate txn
         TransactionPage page = new TransactionPage(driver);

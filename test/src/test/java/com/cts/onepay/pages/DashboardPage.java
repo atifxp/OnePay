@@ -2,6 +2,8 @@ package com.cts.onepay.pages;
 
 import com.cts.onepay.base.BasePage;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class DashboardPage extends BasePage {
 
@@ -11,6 +13,11 @@ public class DashboardPage extends BasePage {
         super(driver);
     }
 
+    @FindBy(xpath = "//button[normalize-space()='Logout']")
+    WebElement btnLogout;
 
+    public void clickLogout(){
+        click(btnLogout);
+    }
 
 }

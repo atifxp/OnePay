@@ -1,6 +1,7 @@
 package com.cts.onepay.tests;
 
 import com.cts.onepay.base.BaseTest;
+import com.cts.onepay.pages.DashboardPage;
 import com.cts.onepay.pages.LoginPage;
 import com.cts.onepay.utils.ConfigReader;
 import org.testng.Assert;
@@ -33,6 +34,8 @@ public class LoginTest extends BaseTest {
                 //entering credentials
                 page.validLoginAs(phoneNum,password);
                 Assert.assertTrue(driver.getCurrentUrl().contains("/dashboard"),"Error in " + TC_ID);
+                DashboardPage dpage= new DashboardPage(driver);
+                dpage.clickLogout();
                 break;
             case "failure":
                 page.loginAs(phoneNum,password);
