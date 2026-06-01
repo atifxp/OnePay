@@ -17,7 +17,10 @@ public class DashboardPage extends BasePage {
     WebElement btnLogout;
 
     public void clickLogout(){
-        click(btnLogout);
+        waitForClickability(btnLogout).click();
+        //wait for login page
+        wait.until(d -> d.getCurrentUrl().contains("/login"));
     }
+
 
 }

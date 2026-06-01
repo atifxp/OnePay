@@ -11,22 +11,22 @@ public class BaseTest {
 
     protected static WebDriver driver;
 
-    @BeforeSuite
+    @BeforeSuite(alwaysRun = true)
     public void beforeSuite(){}
 
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp(){
         driver = DriverManager.getDriver(ConfigReader.get("browser"),ConfigReader.getBoolean("headless"));
         driver.manage().window().maximize();
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
         DriverManager.quitDriver();
     }
 
-    @AfterSuite
+    @AfterSuite(alwaysRun = true)
     public void afterSuite(){
         //close excel
         ExcelUtils.close();

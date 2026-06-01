@@ -15,7 +15,10 @@
     </div>
 
     @if (error()) {
-      <div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+      <div
+        id="errorMsg"
+        class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4"
+      >
         {{ error() }}
       </div>
     }
@@ -33,7 +36,7 @@
         </a>
       </div>
     } @else {
-      <div class="space-y-3">
+      <div id="approvedLoans" class="space-y-3">
         @for (loan of loans(); track loan.loanId) {
           <a
             [routerLink]="['/loans', loan.loanId]"

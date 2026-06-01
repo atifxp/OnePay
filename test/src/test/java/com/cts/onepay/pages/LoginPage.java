@@ -25,12 +25,14 @@ public class LoginPage extends BasePage {
 
     public LoginPage setPassword(String password) {
         waitForVisibility(passwordInput);
+        passwordInput.clear();
         passwordInput.sendKeys(password);
         return this;
     }
 
     public LoginPage setPhone(String phone){
         waitForVisibility(phoneInput);
+        phoneInput.clear();
         phoneInput.sendKeys(phone);
         return this;
     }
@@ -61,14 +63,15 @@ public class LoginPage extends BasePage {
         super.navigate(route);
     }
 
-    public void validLoginAs(String phone, String password) throws InterruptedException {
+    public void validLoginAs(String phone, String password) {
+        String originalUrl = driver.getCurrentUrl();
         this.setPhone(phone)
-            .setPassword(password)
+                .setPassword(password)
                 .clickLogin();
-        wait.until(d -> d.getCurrentUrl().contains("/dashboard"));
+        wait.until(d -> !d.getCurrentUrl().contains(originalUrl));
     }
 
-    public void loginAs(String phone, String password) throws InterruptedException {
+    public void loginAs(String phone, String password) {
         this.setPhone(phone)
                 .setPassword(password)
                 .clickLogin();

@@ -1,6 +1,7 @@
 package com.cts.onepay.base;
 
 import com.cts.onepay.utils.ConfigReader;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -13,10 +14,12 @@ public class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected final String BASE_URL = ConfigReader.get("baseUrl");
+    protected JavascriptExecutor js;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(this.driver, Duration.ofSeconds(ConfigReader.getLong("explicit.wait")));
+        this.js = (JavascriptExecutor) driver;
         PageFactory.initElements(this.driver,this);
     }
 
@@ -32,12 +35,8 @@ public class BasePage {
         return wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    protected void type(WebElement element, String text) {
-        waitForVisibility(element).sendKeys(text);
-    }
-
-    protected void click(WebElement element) {
-        waitForClickability(element).click();
+    protected void scrollIntoView(WebElement element){
+        js.executeScript("arguments[0].scrollIntoView(true)",element);
     }
 
 }
