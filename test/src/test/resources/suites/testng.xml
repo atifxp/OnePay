@@ -2,6 +2,9 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
 <suite name="OnePayFullSuite" parallel="false">
+    <listeners>
+        <listener class-name="com.cts.onepay.utils.ExtentReportManager"/>
+    </listeners>
     <test name="Auth">
         <classes>
             <class name="com.cts.onepay.tests.LoginTest"/>

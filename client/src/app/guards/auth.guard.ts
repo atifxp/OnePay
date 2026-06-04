@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   return userService.getProfile().pipe(
-    map(() => true),
+    map(() => true), // If the Observable completes successfully, it maps the result to true
     catchError(() => of(router.createUrlTree(['/login']))),
   );
 };

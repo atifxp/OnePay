@@ -1,5 +1,6 @@
 package com.cts.OnePay.loan.model;
 
+import com.cts.OnePay.audit.Auditable;
 import com.cts.OnePay.loan.model.enums.LoanStatus;
 import com.cts.OnePay.loan.model.enums.LoanType;
 import com.cts.OnePay.user.model.User;
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanApplication {
+public class LoanApplication extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long loanId;

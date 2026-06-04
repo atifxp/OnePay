@@ -19,6 +19,7 @@ import com.cts.OnePay.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public List<LoanApplicationResponseDTO> getAllLoans() {
-        return loanApplicationRepository.findAll()
+        return loanApplicationRepository.findAll(Sort.by(Sort.Direction.DESC,"createdDate"))
                 .stream()
                 .map(this::mapToApplicationResponse)
                 .collect(Collectors.toList());
