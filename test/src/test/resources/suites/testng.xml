@@ -20,5 +20,10 @@
             <class name="com.cts.onepay.tests.LoanApplyTest"/>
         </classes>
     </test>
+    <test name="loanDecide">
+        <classes>
+            <class name="com.cts.onepay.tests.LoanOfficerTest"/>
+        </classes>
+    </test>
 
 </suite>
