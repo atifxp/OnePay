@@ -28,8 +28,13 @@ public class DriverManager {
                     driver = new ChromeDriver(chromeOptions);
                     break;
                 case "edge":
+                    final Map<String, Object> edgePrefs = new HashMap<>();
+                    edgePrefs.put("credentials_enable_service", false);
+                    edgePrefs.put("profile.password_manager_enabled", false);
+                    edgePrefs.put("profile.password_manager_leak_detection", false);
                     EdgeOptions edgeOptions = new EdgeOptions();
-                    if(headless)
+                    edgeOptions.setExperimentalOption("prefs", edgePrefs);
+                    if (headless)
                         edgeOptions.addArguments("--headless");
                     driver = new EdgeDriver(edgeOptions);
                     break;

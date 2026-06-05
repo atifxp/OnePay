@@ -15,7 +15,7 @@ public class LoanApplyTest extends BaseTest {
 
     LoginPage loginPage;
 
-    @BeforeClass(description = "Login as a valid user")
+    @BeforeClass(description = "Login as a valid user", groups = {"sanity","regression"})
     public void loginAsValidUser(){
         //navigate to the login page
         loginPage = new LoginPage(driver);
@@ -27,6 +27,7 @@ public class LoanApplyTest extends BaseTest {
     @Test(
             dataProvider = "loanApplyData",
             dataProviderClass = LoanApplyDataProvider.class,
+            groups = {"sanity","regression"},
             description = "Loan Tests covering TCs - TC_LOAN_01,TC_LOAN_02,TC_LOAN_03"
     )
     public void loanApplyScenarios(

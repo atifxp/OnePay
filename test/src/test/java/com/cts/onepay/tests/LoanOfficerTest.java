@@ -15,7 +15,7 @@ public class LoanOfficerTest extends BaseTest {
     LoanDecisionPage decisionPage;
     LoginPage loginPage;
 
-    @BeforeClass
+    @BeforeClass(groups = {"sanity","regression"})
     public void loginAsLoanOfficer(){
         decisionPage= new LoanDecisionPage(driver);
         loginPage= new LoginPage(driver);
@@ -26,7 +26,7 @@ public class LoanOfficerTest extends BaseTest {
         );
     }
 
-    @BeforeMethod
+    @BeforeMethod(groups = {"sanity","regression"})
     public void navigateToLoanPage(){
         decisionPage.navigate(ConfigReader.get("route.admin.loans"));
     }
@@ -34,6 +34,7 @@ public class LoanOfficerTest extends BaseTest {
     @Test(
             dataProvider = "loanOfficerData",
             dataProviderClass = LoanOfficerDataProvider.class,
+            groups = {"sanity","regression"},
             description = "Loan Tests covering TCs - TC01, TC02"
     )
     public void decideLoanApplication(String TC_ID, String action, String expectedResult){

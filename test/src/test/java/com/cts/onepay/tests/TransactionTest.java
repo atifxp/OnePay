@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class TransactionTest extends BaseTest {
 
-    @BeforeClass
+    @BeforeClass(groups = {"smoke","regression"})
     public void loginAsCustomer() throws InterruptedException {
         LoginPage login = new LoginPage(driver);
         login.navigate(ConfigReader.get("route.login"));
@@ -24,6 +24,7 @@ public class TransactionTest extends BaseTest {
     @Test(
             dataProvider = "transferData",
             dataProviderClass = TransactionDataProvider.class,
+            groups = {"smoke","regression"},
             description = "Transfer Tests covering TCs - TC_TXN_01, TC_TXN_02, TC_TXN_03"
     )
     public void transferScenarios(

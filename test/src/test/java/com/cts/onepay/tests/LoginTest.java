@@ -14,6 +14,7 @@ public class LoginTest extends BaseTest {
     @Test(
             dataProvider = "loginData",
             dataProviderClass = LoginDataProvider.class,
+            groups = {"smoke","regression"},
             description = "Login Tests covering TCs - TC_LOGIN_01,TC_LOGIN_02,TC_LOGIN_03"
     )
     public void loginScenarios(
