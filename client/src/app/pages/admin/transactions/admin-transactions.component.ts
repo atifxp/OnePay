@@ -16,7 +16,7 @@ export class AdminTransactionsComponent implements OnInit {
   page = signal(0);
   totalPages = signal(0);
   totalElements = signal(0);
-  private readonly pageSize = 15;
+  private readonly pageSize = 10;
 
   constructor(private transactionService: TransactionService) {}
 

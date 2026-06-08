@@ -4,11 +4,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserService, UserProfile } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, Navbar],
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit {

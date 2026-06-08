@@ -65,9 +65,8 @@ public class ExtentReportManager implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        testLogger = extentReport.createTest(result.getName()); //create a new entry in the report
+        testLogger.fail(result.getThrowable());
         testLogger.log(Status.FAIL,"Test case FAILED is: " + result.getName());
-
         WebDriver driver = DriverManager.getDriver(ConfigReader.get("browser"),ConfigReader.getBoolean("headless"));;
         if(driver != null){
             String screenshotPath = ScreenshotUtils.captureScreenshot(

@@ -77,7 +77,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Map data into response dto
         return toDto(transaction);
     }
-
+    //get all txn for a particular user
     public Page<TransactionResponseDto> getMyTransactions(Long userId, int page, int size){
         Wallet wallet= walletRepository.findByUser_UserId(userId)
                 .orElseThrow(()-> new RuntimeException("Cannot find user wallet"));
@@ -87,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .findBySenderWallet_WalletIdOrReceiverWallet_WalletId(walletId, walletId, pageable);
         return transactions.map(this::toDto);
     }
-
+    //for fetching the txn details for a single txn
     public TransactionResponseDto getMyTransactionById(Long transactionId, Long userId){
         Transaction transaction= transactionRepository.findById(transactionId)
                 .orElseThrow(()->new RuntimeException("Transaction doesn't exist"));

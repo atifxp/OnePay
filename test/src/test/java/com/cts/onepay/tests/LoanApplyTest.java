@@ -28,7 +28,7 @@ public class LoanApplyTest extends BaseTest {
             dataProvider = "loanApplyData",
             dataProviderClass = LoanApplyDataProvider.class,
             groups = {"sanity","regression"},
-            description = "Loan Tests covering TCs - TC_LOAN_01,TC_LOAN_02,TC_LOAN_03"
+            description = "Loan Tests covering TCs - TC_LOAN_01,TC_LOAN_02,TC_LOAN_03,TC_LOAN_04"
     )
     public void loanApplyScenarios(
             String TC_ID,

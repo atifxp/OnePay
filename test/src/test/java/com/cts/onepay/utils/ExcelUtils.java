@@ -10,7 +10,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public final class ExcelUtils {
@@ -40,7 +42,7 @@ public final class ExcelUtils {
         int lastRow = ws.getLastRowNum();
         int totalCells = ws.getRow(1).getLastCellNum();
 
-        java.util.List<Object[]> rows = new java.util.ArrayList<>();
+        List<Object[]> rows = new ArrayList<>();
         for (int r = 1; r <= lastRow; r++) {
             XSSFRow row = ws.getRow(r);
             if (row == null) continue;

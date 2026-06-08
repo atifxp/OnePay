@@ -58,7 +58,7 @@ public class LoanServiceImpl implements LoanService {
         LoanApplication saved = loanApplicationRepository.save(loan);
         return mapToApplicationResponse(saved);
     }
-
+    //fetching loans details for user
     @Override
     public LoanApplicationResponseDTO getLoanById(Long loanId, MyUserDetails userDetails) {
         LoanApplication loan = loanApplicationRepository.findById(loanId)
@@ -69,7 +69,7 @@ public class LoanServiceImpl implements LoanService {
         }
         return mapToApplicationResponse(loan);
     }
-
+    //fetching all loans for officer/admin
     @Override
     public List<LoanApplicationResponseDTO> getAllLoans() {
         return loanApplicationRepository.findAll(Sort.by(Sort.Direction.DESC,"createdDate"))
@@ -77,7 +77,7 @@ public class LoanServiceImpl implements LoanService {
                 .map(this::mapToApplicationResponse)
                 .collect(Collectors.toList());
     }
-
+    //fetching all loans for a user
     @Override
     public List<LoanApplicationResponseDTO> getLoansByUser(Long userId) {
         return loanApplicationRepository.findByUser_UserId(userId)
@@ -109,10 +109,10 @@ public class LoanServiceImpl implements LoanService {
         if (loan.getLoanStatus() == LoanStatus.APPROVED || loan.getLoanStatus() == LoanStatus.REJECTED) {
             throw new RuntimeException("Loan is already " + loan.getLoanStatus() + " and cannot be updated.");
         }
-
+        //save updated status
         loan.setLoanStatus(requestDTO.getLoanStatus());
         loanApplicationRepository.save(loan);
-
+        //if approved, add to wallet
         if (requestDTO.getLoanStatus() == LoanStatus.APPROVED) {
             Wallet wallet = walletRepository.findByUser_UserId(loan.getUser().getUserId())
                     .orElseThrow(() -> new RuntimeException("Wallet not found for user: " + loan.getUser().getUserId()));
@@ -120,6 +120,7 @@ public class LoanServiceImpl implements LoanService {
             walletRepository.save(wallet);
         }
 
+        //add to approved table
         Optional<LoanApproval> existingApproval = loanApprovalRepository.findByLoanId_LoanId(requestDTO.getLoanId());
 
         LoanApproval approval;
